@@ -5,6 +5,10 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 
 public class Controller {
     private XboxController xbox;
+    private static final byte DPAD_U_PORT = 100;
+    private static final byte DPAD_D_PORT = 100;
+    private static final byte DPAD_L_PORT = 100;
+    private static final byte DPAD_R_PORT = 100;
     private Button a, b, x, y, rb, lb, lstick, rstick, back, start;
     public Controller(XboxController xbox){
         this.xbox = xbox;
@@ -19,6 +23,11 @@ public class Controller {
         back = new Button(xbox::getBackButton);
         start = new Button(xbox::getStartButton);
     }
+    public boolean getDpadUp(){ return xbox.getRawButton(DPAD_U_PORT);}
+    public boolean getDpadDown(){ return xbox.getRawButton(DPAD_D_PORT);}
+    public boolean getDpadLeft(){ return xbox.getRawButton(DPAD_L_PORT);}
+    public boolean getDpadRight(){ return xbox.getRawButton(DPAD_R_PORT);}
+
     public Button getAButton(){ return a;}
     public Button getBButton(){ return b;}
     public Button getXButton(){ return x;}
