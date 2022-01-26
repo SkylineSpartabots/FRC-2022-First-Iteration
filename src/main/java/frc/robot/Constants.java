@@ -23,6 +23,14 @@ public final class Constants {
          *
          * Should be measured from center to center.
          */
+
+
+        /**
+         * TODO:
+         * Add Zach's controller constants/system
+         * Add new field constants
+         * Add new constants for the new swerve drive
+         */
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 0; // FIXME Set front left module drive motor ID
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 8; // FIXME Set front left steer encoder ID
