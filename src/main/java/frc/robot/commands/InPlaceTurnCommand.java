@@ -7,9 +7,6 @@ import static frc.robot.Constants.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
 import edu.wpi.first.math.trajectory.Trajectory;
