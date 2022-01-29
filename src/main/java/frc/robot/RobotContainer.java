@@ -5,12 +5,15 @@
 package frc.robot;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.utils.Controller;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
@@ -29,7 +32,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
-  private final XboxController m_controller = new XboxController(0);
+  private final Controller m_controller = new Controller(new XboxController(0));
 
   private final ProfiledPIDController m_thetaController;
 
@@ -71,10 +74,10 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new Button(m_controller::getBackButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-     new Button(m_controller::getAButton).whenPressed(this::resetOdometryFromPosition);
-    // new Button(m_controller::getXButton).whenPressed();
-    // new Button(m_controller::getYButton).whenPressed(robot::robotInit);
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    m_controller.getAButton().whenPressed(this::resetOdometryFromPosition);
+    m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
+    m_controller.getButtonCombo(m_controller.getXButton(), m_controller.getYButton()).whenActive(this::hardResetOdometryFromReference);
   }
 
   public DrivetrainSubsystem getDriveTrainSubsystem()
@@ -99,6 +102,34 @@ public class RobotContainer {
     var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
 
     m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
+  }
+  
+  public void resetOdometryFromReference(double threshold){
+    Translation2d current = m_drivetrainSubsystem.getPose().getTranslation();
+    double minError = FieldConstants.kMinReferenceError;
+    Translation2d newPos = null;
+    for(Translation2d ref : FieldConstants.kReferenceTranslations){
+      double errorX = Math.abs(ref.getX() - current.getX());
+      double errorY = Math.abs(ref.getY() - current.getY());
+      double error = Math.min(minError, Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2)));
+      if(error < minError){
+        newPos = ref;
+        minError = error;
+      }
+    }
+    if(minError < FieldConstants.kMinReferenceError){
+      m_drivetrainSubsystem.resetOdometry(new Pose2d(newPos, m_drivetrainSubsystem.getGyroscopeRotation()));
+      SmartDashboard.putBoolean("Too Far From Reference", false);
+    }
+    else
+      SmartDashboard.putBoolean("Too Far From Reference", true);
+  }
+
+  public void softResetOdometryFromReference(){
+    resetOdometryFromReference(FieldConstants.kMinReferenceError);
+  }
+  public void hardResetOdometryFromReference(){
+    resetOdometryFromReference(100d);
   }
 
   public void resetOdometryFromPosition(){

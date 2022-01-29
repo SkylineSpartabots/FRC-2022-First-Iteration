@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -27,8 +29,6 @@ public final class Constants {
 
         /**
          * TODO:
-         * Add Zach's controller constants/system
-         * Add new field constants
          * Add new constants for the new swerve drive
          */
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 0; // FIXME Set front left module drive motor ID
@@ -110,5 +110,22 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    }
+    public static final class FieldConstants{
+        //Meters, degrees
+        public static final double kTargetHeight = 2.36474;
+        public static final double kLensHeight = 2.36474;
+        public static final double kLensAngle = 1;
+
+        public static final Translation2d kTargetTranslation = new Translation2d(0,0);
+        public static final List<Translation2d> kStartingTranslations = List.of(
+            new Translation2d()
+        );
+        public static final List<Translation2d> kReferenceTranslations = List.of(
+            new Translation2d(1, 0),
+            new Translation2d(3, 3)
+        );
+
+        public static final double kMinReferenceError = 0.1;
     }
 }
