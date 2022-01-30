@@ -172,6 +172,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navxOffset = startingPose.getRotation();
     resetOdometry(startingPose);
   }
+
   public void resetOdometry(Pose2d p_pose) {
     m_navx.reset();
     m_odometry.resetPosition(p_pose, getGyroscopeRotation());
@@ -181,11 +182,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
-
   @Override
   public void periodic() {
     var pose = m_odometry.getPoseMeters();
 
+    //TODO:
+    //Refactor to shuffleboard tab
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
