@@ -73,10 +73,11 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    
+    //TODO:
+    //Test new odo initialize method
+    //DrivetrainSubsystem.getInstance().initializeOdometryToField();
     DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d());
-    //m_autonomousCommand = DriveCommandFactory.getAutonomousCommand();
-    m_autonomousCommand = new TurnFromOffset(5);
+    m_autonomousCommand = DriveCommandFactory.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

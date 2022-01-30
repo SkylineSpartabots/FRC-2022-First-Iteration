@@ -4,8 +4,12 @@
 
 package frc.robot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -117,9 +121,14 @@ public final class Constants {
         public static final double kLensAngle = 1;
 
         public static final Translation2d kTargetTranslation = new Translation2d(0,0);
-        public static final List<Translation2d> kStartingTranslations = List.of(
-            new Translation2d()
-        );
+        //TODO:
+        //Determine starting field positions
+        public static final Map<String, Pose2d> kStartingPositions = new HashMap(){{
+            put("Blue Tarmac Inner", new Pose2d(0,0, new Rotation2d()));
+            put("Blue Tarmac Outer", new Pose2d(0,0, new Rotation2d()));
+            put("Red Tarmac Inner", new Pose2d(0,0, new Rotation2d()));
+            put("Red Tarmac Outer", new Pose2d(0,0, new Rotation2d()));
+        }};
         public static final List<Translation2d> kReferenceTranslations = List.of(
             new Translation2d(1, 0),
             new Translation2d(3, 3)

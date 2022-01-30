@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
+import java.io.Console;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
@@ -11,6 +13,7 @@ import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -68,6 +72,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+  private Rotation2d m_navxOffset = new Rotation2d(0);
 
   private static DrivetrainSubsystem m_instance = null;
   public static DrivetrainSubsystem getInstance(){
@@ -146,7 +151,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public Rotation2d getGyroscopeRotation() {
    if (m_navx.isMagnetometerCalibrated()) {
      // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+
+     //OK THIS IS VERY VERY VERY UNSTABLE AND NEEDS THOROUGH TESTING BUT THIS SEEMS LIKE A LEGIT WAY TO ADD AN OFFSET
+     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + m_navxOffset.getDegrees());
    }
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
@@ -156,6 +163,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return m_odometry.getPoseMeters();
   }
 
+  public void initializeOdometryToField(){
+    //TODO:
+    //Make shuffleboard stuff pretty here
+    //Probably wanna incorporate a dropdown using the list available in Constants.FieldConstants.kStartingPositions
+    String startingKey = SmartDashboard.getString("Starting Position", "Blue Tarmac Inner");
+    Pose2d startingPose = Constants.FieldConstants.kStartingPositions.get(startingKey);
+    m_navxOffset = startingPose.getRotation();
+    resetOdometry(startingPose);
+  }
   public void resetOdometry(Pose2d p_pose) {
     m_navx.reset();
     m_odometry.resetPosition(p_pose, getGyroscopeRotation());
