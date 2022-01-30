@@ -19,6 +19,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    //timeout for CAN commands and error checking
+    public static final int kTimeOutMs = 10;
+
     public static final class DriveConstants {
         /**
          * The left-to-right distance between the drivetrain wheels
@@ -122,5 +126,38 @@ public final class Constants {
         );
 
         public static final double kMinReferenceError = 0.1;
+    }
+    public static final class ShooterConstants {
+        public static final int MASTER_SHOOTER_MOTOR = 2;
+        public static final int SLAVE_SHOOTER_MOTOR = 3;
+
+        public static final double kFlywheelAngle = 0;
+        public static final double kFlywheelHeight = 0;
+        public static final double kFlywheetRobotOffset = 0; // Distance between front of shooter to front of robot
+        public static final double kGravityAccelConstant = 9.81;
+
+        public static final double kFalconVeloRpmFactor = 0;
+        public static final double cargoMassKg = 35.274;
+        public static final int kFlywheelMotor = 0;
+        public static final double distanceToVelocity = 0.5379;
+    }
+
+    public static final class IndexerConstants {
+        public static final int INDEXER_MOTOR = 9;
+        public static final double indexerSpeedPercent = 0.3;
+    }
+
+    public static final class ClimbConstants {
+        public static final double kClimbMaxHeight = 18800;
+    }
+
+    public static final class Ports{
+        //TODO: 
+        //GET PORTS FROM PHOENIX TUNER
+        public static final int CLIMB_ENCODER_A = 0;
+        public static final int CLIMB_ENCODER_B = 0;
+        public static final int CLIMB_HOOK_ID = 0;
+        public static final int CLIMB_MASTER_WINCH_ID = 0;
+        public static final int CLIMB_SLAVE_WINCH_ID = 0;
     }
 }
