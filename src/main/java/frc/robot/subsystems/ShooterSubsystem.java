@@ -104,6 +104,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //THIS IS EXACTLY HOW ALL SUBSYSTEM PERIODIC FUNCTIONS SHOULD LOOK!!! THIS IS FIRE
+        //IDK WHO WROTE IT BUT YOURE A BALLER
         table.getEntry("Flywheel Talon Velocity").setDouble(mMasterShooter.getSelectedSensorVelocity());
         table.getEntry("Flywheel Talon Power").setDouble(mMasterShooter.getMotorOutputPercent());
         table.getEntry("Flywheel RPM").setDouble(rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import frc.robot.subsystems.*;
 
@@ -55,14 +55,11 @@ public class DriveCommandFactory {
     //return new TrajectoryDriveCommand(List.of(), new Pose2d(0,0,new Rotation2d(0.5)), true);
     //return new TrajectoryDriveCommand(List.of(), new Pose2d(0,0,new Rotation2d(rot.getRadians()-(LimelightSubsystem.getInstance().getXOffset()*3.1416/180))), true);
   }
-
-
   // use field relative coordinate, move to target.
   public static Command getDriveToCommand(double p_targetX, double p_targetY, double p_targetAngleRad)
   {
     return new TrajectoryDriveCommand(List.of(), new Pose2d(p_targetX, p_targetY, new Rotation2d(p_targetAngleRad)), true); 
   }
-
 
   public static Command get2019AutonomousCommandSimple() {
 

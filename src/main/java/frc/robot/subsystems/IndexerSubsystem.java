@@ -38,4 +38,10 @@ public class IndexerSubsystem extends SubsystemBase{
     public void setIndexerPowerPercent(double power){
         IndexerMotor.set(ControlMode.PercentOutput, power);
     }
+
+    @Override
+    public void periodic(){
+        //TODO
+        //SHUFFLEBOARD HERE
+    }
 }

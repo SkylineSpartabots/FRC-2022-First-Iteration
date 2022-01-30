@@ -59,21 +59,8 @@ public class ClimbSubsystem extends SubsystemBase {
     private void configureHookMotor(InvertType inversion) {
         mHookSlideMotor.setInverted(inversion);
 
-        /*PheonixUtil.checkError(mHookSlideMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
-            0, Constants.kTimeOutMs), "Hook Slide Motor failed to configure feedback device", true);
-        mHookSlideMotor.setSensorPhase(false);*/
-        
-        //mHookSlideMotor.setSelectedSensorPosition(0);
-
-        /*PheonixUtil.checkError(mHookSlideMotor.configForwardSoftLimitThreshold(10000, Constants.kTimeOutMs),
-             "Hook Slide Motor failed to set forward soft limit threshold", true);
-        mHookSlideMotor.configForwardSoftLimitEnable(false);
-        PheonixUtil.checkError(mHookSlideMotor.configReverseSoftLimitThreshold(0, Constants.kTimeOutMs),
-             "Hook Slide Motor failed to set reverse soft limit threshold", true);
-        mHookSlideMotor.configReverseSoftLimitEnable(false);*/
-
         PheonixUtil.checkError(mHookSlideMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs), 
-             "Hook Slide Motor failed tp set voltage compensation", true);
+             "Hook Slide Motor failed to set voltage compensation", true);
         mHookSlideMotor.enableVoltageCompensation(true);
 
         TalonSRXUtil.setCurrentLimit(mHookSlideMotor, 5);
@@ -110,14 +97,6 @@ public class ClimbSubsystem extends SubsystemBase {
         return mCurrentState;
     }
 
-    public synchronized void setState(ClimbControlState newState) {
-        if(newState != mCurrentState) {
-            mStateChanged = true;
-            mStateChangeTimestamp = Timer.getFPGATimestamp();
-        }
-        mCurrentState = newState;
-    }
-
     public synchronized void setHookSlideSpeed(double percentOutput) {
         mHookSlideMotor.set(ControlMode.PercentOutput, percentOutput);
     }
@@ -129,7 +108,6 @@ public class ClimbSubsystem extends SubsystemBase {
     public synchronized void conformToState(ClimbControlState desiredState) {
         setState(desiredState);
 
-
         if(mCurrentState == ClimbControlState.RAISE_HOOK && mClimbHookEncoder.getDistance() > Constants.ClimbConstants.kClimbMaxHeight) {
             setHookSlideSpeed(0.0);
         } else if(mCurrentState == ClimbControlState.LOWER_HOOK && mClimbHookEncoder.getDistance() < 0.0) {
@@ -137,43 +115,21 @@ public class ClimbSubsystem extends SubsystemBase {
         } else {
             setHookSlideSpeed(desiredState.hookSlideSpeed);
         }
-        
+
         setWinchSpeed(desiredState.winchSpeed);
     }
     
-    public void raiseHook() {
-        conformToState(ClimbControlState.RAISE_HOOK);
+    public void setState(ClimbControlState state){
+        conformToState(state);
     }
-    
-    public void off() {
-        conformToState(ClimbControlState.OFF);
-    }
-
-    // public void lowerHook() {
-    //     conformToState(ClimbControlState.LOWER_HOOK);
-    // }
-    
-    public void winchUp() {
-        conformToState(ClimbControlState.WINCH_UP); 
-    }
-    
     @Override
     public void periodic() {
-        synchronized(ClimbSubsystem.this) {
-            if(mCurrentState == ClimbControlState.RAISE_HOOK) {
-                if(mClimbHookEncoder.getDistance() > Constants.ClimbConstants.kClimbMaxHeight) {
-                    mHookSlideMotor.set(ControlMode.PercentOutput, 0.0);
-                }
-            } else if(mCurrentState == ClimbControlState.LOWER_HOOK) {
-                if(mClimbHookEncoder.getDistance() < 0.0) {
-                    mHookSlideMotor.set(ControlMode.PercentOutput, 0.0);
-                }
-            }
-        }
-    }              
+        //TODO;
+        //SHUFFLEBOARD HERE
+    }
 
     @Override
     public void simulationPeriodic() {
-        this.periodic();       
-    }        
+        this.periodic();
+    }
 }

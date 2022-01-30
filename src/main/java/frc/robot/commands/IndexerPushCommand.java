@@ -7,9 +7,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 
 public class IndexerPushCommand extends CommandBase{
     private final IndexerSubsystem m_subsystem;
-
     private final Timer m_timer = new Timer();
-
     private final double m_durationPush = 0.25;
 
     public IndexerPushCommand(){

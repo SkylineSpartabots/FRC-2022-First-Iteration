@@ -1,8 +1,9 @@
-package frc.robot.commands;
+package frc.robot.commands.shoot;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants;
+import frc.robot.commands.IndexerPushCommand;
 
 public class DoubleShootCommand extends SequentialCommandGroup{
 

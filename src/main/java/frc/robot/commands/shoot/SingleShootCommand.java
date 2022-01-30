@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.shoot;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -48,6 +48,8 @@ public class SingleShootCommand extends CommandBase{
     @Override
     public void end(boolean interrupted){
         m_timer.stop();
+        //Set percent to low constant power TBD later
+        m_subsystem.setMotorPowerPercent(0);
     }
 
     @Override

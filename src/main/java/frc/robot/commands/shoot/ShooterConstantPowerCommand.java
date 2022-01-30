@@ -1,5 +1,5 @@
 
-package frc.robot.commands;
+package frc.robot.commands.shoot;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -25,5 +25,7 @@ public class ShooterConstantPowerCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted){
+        //Set motor percent to low constant power TBD later
+        m_subsystem.setMotorPowerPercent(0.0);
     }
 }

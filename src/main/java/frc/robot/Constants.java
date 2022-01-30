@@ -154,6 +154,7 @@ public final class Constants {
     public static final class Ports{
         //TODO: 
         //GET PORTS FROM PHOENIX TUNER
+        //ALSO I THINK WE'RE NOT SUPPOSED TO USE MASTER/SLAVE TERMINOLOGY SO REFACTOR THAT LATER
         public static final int CLIMB_ENCODER_A = 0;
         public static final int CLIMB_ENCODER_B = 0;
         public static final int CLIMB_HOOK_ID = 0;
