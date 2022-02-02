@@ -69,12 +69,17 @@ public class LimelightSubsystem extends SubsystemBase {
     public double getYOffset(){
         return nt.getEntry("ty").getDouble(0.0);
     }
-    
+
   @Override
   public void periodic() {
     //post to smart dashboard periodically
     SmartDashboard.putNumber("LimelightX", getXOffset());
     SmartDashboard.putNumber("LimelightY", getYOffset());
+  }
+  
+  @Override
+  public void simulationPeriodic(){
+    this.periodic();
   }
   public Rotation2d getRotationOffsetFromPosition(Translation2d position){
       double targetDistance = getDistance();

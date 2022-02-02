@@ -193,9 +193,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
   }
 
+  @Override
+  public void simulationPeriodic(){
+    this.periodic();
+  }
+
   public void applyDrive() {
     SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
-    //normalizeWheelSpeeds was deprecated, renamed to this:
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MaxSpeedMetersPerSecond);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[0].angle.getRadians());

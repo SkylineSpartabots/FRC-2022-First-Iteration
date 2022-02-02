@@ -23,7 +23,9 @@ public class ClimbCommand extends CommandBase {
     }
     @Override
     public void execute(){
-        m_subsystem.setState(m_state);
+        boolean interrupted = m_subsystem.setState(m_state);
+        if(interrupted)
+            end(false);
     }
     @Override
     public void end(boolean interrupted){

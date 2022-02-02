@@ -105,22 +105,21 @@ public class ClimbSubsystem extends SubsystemBase {
         mMasterWinch.set(ControlMode.PercentOutput, Math.abs(percentOutput));
     }
 
-    public synchronized void conformToState(ClimbControlState desiredState) {
-        setState(desiredState);
-
+    public synchronized boolean setState(ClimbControlState desiredState) {
+        boolean interrupted = false;
+        mCurrentState = desiredState;
         if(mCurrentState == ClimbControlState.RAISE_HOOK && mClimbHookEncoder.getDistance() > Constants.ClimbConstants.kClimbMaxHeight) {
             setHookSlideSpeed(0.0);
+            interrupted = true;
         } else if(mCurrentState == ClimbControlState.LOWER_HOOK && mClimbHookEncoder.getDistance() < 0.0) {
             setHookSlideSpeed(0.0);
+            interrupted = true;
         } else {
             setHookSlideSpeed(desiredState.hookSlideSpeed);
         }
 
         setWinchSpeed(desiredState.winchSpeed);
-    }
-    
-    public void setState(ClimbControlState state){
-        conformToState(state);
+        return interrupted;
     }
     @Override
     public void periodic() {
