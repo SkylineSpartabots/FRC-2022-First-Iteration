@@ -164,7 +164,7 @@ public class RobotContainer {
     previousRotSpeed = newRotSpeed;
 
 
-    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(newXSpeed, newYSpeed, newRotSpeed, m_drivetrainSubsystem.getGyroscopeRotation()));
+    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
   }
 
   public void resetOdometryFromReference(double threshold){

@@ -23,16 +23,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
     //timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
 
-    public static final class DriveConstants {
-        /**
-         * The left-to-right distance between the drivetrain wheels
-         *
-         * Should be measured from center to center.
-         */
+    public static class DriveConstants {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 0; // FIXME Set front left module drive motor ID
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 8; // FIXME Set front left steer encoder ID
@@ -53,12 +47,8 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(157.2363); // FIXME Measure and set back right steer offset
 
-
-        
         public static final double kTrackWidth = 0.2921;
-        // Distance between centers of right and left wheels on robot
         public static final double kWheelBase = 0.2921;
-        // Distance between front and back wheels on robot
 
         public static final SwerveDriveKinematics kDriveKinematics =
             new SwerveDriveKinematics(
@@ -69,37 +59,17 @@ public final class Constants {
 
                 public static final boolean kGyroReversed = false;
 
-        // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-        // These characterization values MUST be determined either experimentally or theoretically
-        // for *your* robot's drive.
-        // The SysId tool provides a convenient method for obtaining these values for your robot.
-        public static final double ksVolts = 1;
-        public static final double kvVoltSecondsPerMeter = 0.8;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.15;
+        public static final double ksVolts = 0.52717;
+        public static final double kvVoltSecondsPerMeter = 0.34344;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.011638;
     
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 6;
         
         public static final double DriveMaxAccelerationPerPeriodic =  20.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
         public static final double RotationMaxAccelerationPerPeriodic =  100.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
-
     }
 
-    public static final class ChronosDriveConstants {
-        /**
-         * The left-to-right distance between the drivetrain wheels
-         *
-         * Should be measured from center to center.
-         */
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.4953; // FIXME Measure and set trackwidth
-        /**
-         * The front-to-back distance between the drivetrain wheels.
-         *
-         * Should be measured from center to center.
-         */
-        public static final double DRIVETRAIN_WHEELBASE_METERS = 0.4953; // FIXME Measure and set wheelbase
-    
-        public static final int DRIVETRAIN_PIGEON_ID = 0; // FIXME Set Pigeon ID
-    
+    public static final class ChronosDriveConstants extends DriveConstants{
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front left module drive motor ID
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 9; // FIXME Set front left steer encoder ID
@@ -119,6 +89,13 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; // FIXME Set back right steer motor ID
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID86
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(234.228515625); // FIXME Measure and set back right steer offset
+  
+        public static final double kTrackWidth = 0.4953; // FIXME Measure and set trackwidth
+        public static final double kWheelBase = 0.4953; // FIXME Measure and set wheelbase
+        
+        public static final double ksVolts = 0.50673;
+        public static final double kvVoltSecondsPerMeter = 0.34619;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.018907;
     }
     
     public static final class AutoConstants {
