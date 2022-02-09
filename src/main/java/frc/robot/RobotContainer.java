@@ -7,6 +7,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
+import frc.robot.commands.DriveCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.utils.Controller;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -65,6 +66,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    DriveCommandFactory.swapAutonomousCommands();
   }
 
   /**

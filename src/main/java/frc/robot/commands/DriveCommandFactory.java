@@ -9,49 +9,69 @@ import java.util.List;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class DriveCommandFactory {
   
 
+  static SendableChooser<Command> m_chooser = new SendableChooser<>();
+  public static void swapAutonomousCommands(){
+    m_chooser.setDefaultOption("Small Circle Auto", smallCircle());
+    m_chooser.addOption("Big Circle Auto", bigCircle());
+    m_chooser.addOption("Drive in line Auto", driveInLine());
+    
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(m_chooser);
+
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
+  
   public static Command getAutonomousCommand() {
+    return m_chooser.getSelected();
+  }
+
+  public static Command bigCircle() {
     var command =
       new TrajectoryDriveCommand(
           List.of(
-            new Translation2d(2, 0),
-            new Translation2d(2, 2),
-            new Translation2d(0,2)
+            new Translation2d(1.5, 0),
+            new Translation2d(1, 1.5),
+            new Translation2d(0,1.5)
           ),
-          new Pose2d(0, 0, new Rotation2d(90)),
+          new Pose2d(0, 0, new Rotation2d(0)),
           true);
     return command;
   }
-
-  public static Command getTurnToTargetCommand(){
-   /* if(!LimelightSubsystem.getInstance().hasTarget()){
-      return null;
-    }*/
-    
-    var rot = DrivetrainSubsystem.getInstance().getGyroscopeRotation();
+  
+  public static Command smallCircle() {
     var command =
-    new TrajectoryDriveCommand(
-        List.of(
-          new Translation2d(2, 0),
-          new Translation2d(2, 2),
-          new Translation2d(0,2)
-        ),
-        new Pose2d(0, 0, new Rotation2d(45)),
-        true);
+      new TrajectoryDriveCommand(
+          List.of(
+            new Translation2d(0.5, 0),
+            new Translation2d(0.5, 0.5),
+            new Translation2d(0,0.5)
+          ),
+          new Pose2d(0, 0, new Rotation2d(0)),
+          true);
     return command;
-    
-    //return new TrajectoryDriveCommand(List.of(), new Pose2d(0,0,new Rotation2d(0.5)), true);
-    //return new TrajectoryDriveCommand(List.of(), new Pose2d(0,0,new Rotation2d(rot.getRadians()-(LimelightSubsystem.getInstance().getXOffset()*3.1416/180))), true);
+  }
+  
+  public static Command driveInLine() {
+    var command =
+      new TrajectoryDriveCommand(
+          List.of(
+            new Translation2d(2, 0)
+          ),
+          new Pose2d(0, 0, new Rotation2d(0)),
+          true);
+    return command;
   }
 
 
