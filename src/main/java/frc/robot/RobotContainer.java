@@ -85,7 +85,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_controller.getAButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     m_controller.getBButton().whenPressed(this::resetOdometryFromPosition);
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
     
@@ -129,7 +129,7 @@ public class RobotContainer {
       double Kp = 0.1;
       //double maxSpeed = 2;
       double steering_adjust = Kp*heading_error;
-      rot = steering_adjust; //set kp to 0.1
+      //rot = steering_adjust; //set kp to 0.1
       //rot=Math.copySign(Math.pow(Math.abs(steering_adjust), 0.75),steering_adjust);//multiplies it by the root of the heading error, keeping sign
       //rot = Math.abs(steering_adjust)>maxSpeed?maxSpeed:steering_adjust;      
 

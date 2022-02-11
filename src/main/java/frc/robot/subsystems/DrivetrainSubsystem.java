@@ -52,7 +52,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // need measure on robot
   public static final double MaxAccelerationMetersPerSecondSquared = 10; 
-
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -60,13 +59,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
   private final SwerveDriveOdometry m_odometry;
-  public static final DriveConstants m_driveConstants = new DriveConstants();
+  public static final DriveConstants m_driveConstants = new SmallDriveConstants().DRIVE_CONSTANTS;
   private final SimpleMotorFeedforward m_feedforward;
   private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
   public static final double MaxAngularSpeedRadiansPerSecond = MaxSpeedMetersPerSecond /
           Math.hypot(m_driveConstants.kTrackWidth / 2.0, m_driveConstants.kWheelBase / 2.0);
-
 
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
@@ -212,6 +210,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
     m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
     m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
+
+    // m_frontLeftModule.set(states[0].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
+    // m_frontRightModule.set(states[1].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
+    // m_backLeftModule.set(states[2].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
+    // m_backRightModule.set(states[3].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
 
     m_odometry.update(getGyroscopeRotation(), 
         new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),

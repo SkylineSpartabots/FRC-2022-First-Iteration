@@ -26,76 +26,123 @@ public final class Constants {
     //timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
 
-    public static class DriveConstants {
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 0; // FIXME Set front left module drive motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 8; // FIXME Set front left steer encoder ID
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(82.8781); // FIXME Measure and set front left steer offset
+    public static class ModulePorts{
+        public int DRIVE_MOTOR;
+        public int STEER_MOTOR;
+        public int STEER_ENCODER;
+        public double STEER_OFFSET;
+        public ModulePorts(int driveMotor, int steerMotor, int steerEncoder, double steerOffset){
+            this.DRIVE_MOTOR = driveMotor;
+            this.STEER_MOTOR = steerMotor;
+            this.STEER_ENCODER = steerEncoder;
+            this.STEER_OFFSET = steerOffset;
+        }
+    }
+    public static class DriveConstants{
+        public static int FRONT_LEFT_MODULE_DRIVE_MOTOR;
+        public static int FRONT_LEFT_MODULE_STEER_MOTOR;
+        public static int FRONT_LEFT_MODULE_STEER_ENCODER;
+        public static double FRONT_LEFT_MODULE_STEER_OFFSET;
 
-        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front right drive motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 3; // FIXME Set front right steer motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 9; // FIXME Set front right steer encoder ID
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(168.1320); // FIXME Measure and set front right steer offset
+        public static int FRONT_RIGHT_MODULE_DRIVE_MOTOR;
+        public static int FRONT_RIGHT_MODULE_STEER_MOTOR;
+        public static int FRONT_RIGHT_MODULE_STEER_ENCODER;
+        public static double FRONT_RIGHT_MODULE_STEER_OFFSET;
 
-        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set back left drive motor ID
-        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 5; // FIXME Set back left steer motor ID
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 10; // FIXME Set back left steer encoder ID
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(123.4863); // FIXME Measure and set back left steer offset
+        public static int BACK_LEFT_MODULE_DRIVE_MOTOR;
+        public static int BACK_LEFT_MODULE_STEER_MOTOR;
+        public static int BACK_LEFT_MODULE_STEER_ENCODER;
+        public static double BACK_LEFT_MODULE_STEER_OFFSET;
 
-        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; // FIXME Set back right drive motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 7; // FIXME Set back right steer motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(157.2363); // FIXME Measure and set back right steer offset
+        public static int BACK_RIGHT_MODULE_DRIVE_MOTOR;
+        public static int BACK_RIGHT_MODULE_STEER_MOTOR;
+        public static int BACK_RIGHT_MODULE_STEER_ENCODER;
+        public static double BACK_RIGHT_MODULE_STEER_OFFSET;
 
-        public static final double kTrackWidth = 0.2921;
-        public static final double kWheelBase = 0.2921;
+        public static double kTrackWidth;
+        public static double kWheelBase;
+        
+        public static double ksVolts;
+        public static double kvVoltSecondsPerMeter;
+        public static double kaVoltSecondsSquaredPerMeter;
 
-        public static final SwerveDriveKinematics kDriveKinematics =
+        public DriveConstants(ModulePorts frontLeft, ModulePorts frontRight, ModulePorts backLeft, ModulePorts backRight){
+            FRONT_LEFT_MODULE_DRIVE_MOTOR = frontLeft.DRIVE_MOTOR;
+            FRONT_LEFT_MODULE_STEER_MOTOR = frontLeft.STEER_MOTOR;
+            FRONT_LEFT_MODULE_STEER_ENCODER = frontLeft.STEER_ENCODER;
+            FRONT_LEFT_MODULE_STEER_OFFSET = frontLeft.STEER_OFFSET;
+
+            FRONT_RIGHT_MODULE_DRIVE_MOTOR = frontRight.DRIVE_MOTOR;
+            FRONT_RIGHT_MODULE_STEER_MOTOR = frontRight.STEER_MOTOR;
+            FRONT_RIGHT_MODULE_STEER_ENCODER = frontRight.STEER_ENCODER;
+            FRONT_RIGHT_MODULE_STEER_OFFSET = frontRight.STEER_OFFSET;
+
+            BACK_LEFT_MODULE_DRIVE_MOTOR = backLeft.DRIVE_MOTOR;
+            BACK_LEFT_MODULE_STEER_MOTOR = backLeft.STEER_MOTOR;
+            BACK_LEFT_MODULE_STEER_ENCODER = backLeft.STEER_ENCODER;
+            BACK_LEFT_MODULE_STEER_OFFSET = backLeft.STEER_OFFSET;
+
+            BACK_RIGHT_MODULE_DRIVE_MOTOR = backRight.DRIVE_MOTOR;
+            BACK_RIGHT_MODULE_STEER_MOTOR = backRight.STEER_MOTOR;
+            BACK_RIGHT_MODULE_STEER_ENCODER = backRight.STEER_ENCODER;
+            BACK_RIGHT_MODULE_STEER_OFFSET = backRight.STEER_OFFSET;
+        }
+        
+        public void setWheelBase(double wheelBase){
+            kWheelBase = wheelBase;
+        }
+
+        public void setTrackWidth(double trackWidth){
+            kTrackWidth = trackWidth;
+        }
+
+        public void setCharacterizationConstants(double ks, double kv, double ka){
+            ksVolts = ks;
+            kvVoltSecondsPerMeter = kv;
+            kaVoltSecondsSquaredPerMeter = ka;
+        }
+        public static SwerveDriveKinematics kDriveKinematics =
             new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-                public static final boolean kGyroReversed = false;
-
-        public static final double ksVolts = 0.52717;
-        public static final double kvVoltSecondsPerMeter = 0.34344;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.011638;
-    
-        public static final double kMaxSpeedMetersPerSecond = 6;
+        public static final boolean kGyroReversed = false;
         
+        public static final double kMaxSpeedMetersPerSecond = 6;
         public static final double DriveMaxAccelerationPerPeriodic =  20.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
         public static final double RotationMaxAccelerationPerPeriodic =  100.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
+
+    }
+    public static final class SmallDriveConstants {
+        public static final ModulePorts FRONT_LEFT = new ModulePorts(0,1,8,-Math.toRadians(82.8781));
+        public static final ModulePorts FRONT_RIGHT = new ModulePorts(2,3,9,-Math.toRadians(168.1320));
+        public static final ModulePorts BACK_LEFT = new ModulePorts(4,5,10,-Math.toRadians(123.4863));
+        public static final ModulePorts BACK_RIGHT = new ModulePorts(6,7,11,-Math.toRadians(157.2363));
+
+        public static DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+
+        public SmallDriveConstants(){
+            DRIVE_CONSTANTS.setTrackWidth(0.2921);
+            DRIVE_CONSTANTS.setWheelBase(0.2921);
+            DRIVE_CONSTANTS.setCharacterizationConstants(0.52717, 0.34344, 0.011638);
+        }
     }
 
-    public static final class ChronosDriveConstants extends DriveConstants{
-        public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; // FIXME Set front left module drive motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 1; // FIXME Set front left module steer motor ID
-        public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 9; // FIXME Set front left steer encoder ID
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(301.72576904296875); // FIXME Measure and set front left steer offset
-    
-        public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 8; // FIXME Set front right drive motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 7; // FIXME Set front right steer motor ID
-        public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 12; // FIXME Set front right steer encoder ID
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(265.9515380859375); // FIXME Measure and set front right steer offset
-    
-        public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 4; // FIXME Set back left drive motor ID
-        public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; // FIXME Set back left steer motor ID
-        public static final int BACK_LEFT_MODULE_STEER_ENCODER = 10; // FIXME Set back left steer encoder ID
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(246.1761474609375); // FIXME Measure and set back left steer offset
-    
-        public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 6; // FIXME Set back right drive motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; // FIXME Set back right steer motor ID
-        public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID86
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(234.228515625); // FIXME Measure and set back right steer offset
-  
-        public static final double kTrackWidth = 0.4953; // FIXME Measure and set trackwidth
-        public static final double kWheelBase = 0.4953; // FIXME Measure and set wheelbase
-        
-        public static final double ksVolts = 0.50673;
-        public static final double kvVoltSecondsPerMeter = 0.34619;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.018907;
+    public static final class ChronosDriveConstants{
+        public static final ModulePorts FRONT_LEFT = new ModulePorts(2,1,9,-Math.toRadians(301.72576904296875));
+        public static final ModulePorts FRONT_RIGHT = new ModulePorts(8,7,12,-Math.toRadians(265.9515380859375));
+        public static final ModulePorts BACK_LEFT = new ModulePorts(4,3,10,-Math.toRadians(246.1761474609375));
+        public static final ModulePorts BACK_RIGHT = new ModulePorts(6,5,11,-Math.toRadians(234.228515625));
+
+        public static DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+
+        public ChronosDriveConstants(){
+            DRIVE_CONSTANTS.setTrackWidth(0.4953);
+            DRIVE_CONSTANTS.setWheelBase(0.4953);
+            DRIVE_CONSTANTS.setCharacterizationConstants(0.50673, 0.34619, 0.018907);
+        }
     }
     
     public static final class AutoConstants {
