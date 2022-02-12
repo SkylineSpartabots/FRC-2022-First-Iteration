@@ -41,8 +41,8 @@ public class RobotContainer {
   private double previousYSpeed;
   private double previousRotSpeed;
 
-  public static SendableChooser<Constants.DriveConstants> m_chooser = new SendableChooser<Constants.DriveConstants>();
-  public static Constants.DriveConstants checkDriveConstantsChooser(){
+  public static SendableChooser<DriveConstants> m_chooser = new SendableChooser<DriveConstants>();
+  public static DriveConstants checkDriveConstantsChooser(){
     return m_chooser.getSelected();
   }
 
@@ -58,8 +58,8 @@ public class RobotContainer {
     previousYSpeed = 0;
     previousRotSpeed = 0;
 
-    m_chooser.addDefault("Default(small) drive", new Constants.SmallDriveConstants());
-    m_chooser.addOption("Chronos drive", new Constants.ChronosDriveConstants());
+    m_chooser.addDefault("Default(small) drive", new Constants.SmallDriveConstants().DRIVE_CONSTANTS);
+    m_chooser.addOption("Chronos drive", new Constants.ChronosDriveConstants().DRIVE_CONSTANTS);
 
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
     m_limelight = LimelightSubsystem.getInstance();
