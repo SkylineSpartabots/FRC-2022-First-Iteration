@@ -6,12 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import java.util.Map;
+
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
@@ -110,6 +114,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    if(RobotContainer.checkDriveConstantsChooser() != null){
+      DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
+    }
     m_robotContainer.driveWithJoystick();
   }
 

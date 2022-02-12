@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -40,6 +41,11 @@ public class RobotContainer {
   private double previousYSpeed;
   private double previousRotSpeed;
 
+  public static SendableChooser<Constants.DriveConstants> m_chooser = new SendableChooser<Constants.DriveConstants>();
+  public static Constants.DriveConstants checkDriveConstantsChooser(){
+    return m_chooser.getSelected();
+  }
+
   private final ProfiledPIDController m_thetaController;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -51,6 +57,9 @@ public class RobotContainer {
     previousXSpeed = 0;
     previousYSpeed = 0;
     previousRotSpeed = 0;
+
+    m_chooser.addDefault("Default(small) drive", new Constants.SmallDriveConstants());
+    m_chooser.addOption("Chronos drive", new Constants.ChronosDriveConstants());
 
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
     m_limelight = LimelightSubsystem.getInstance();
