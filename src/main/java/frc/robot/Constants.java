@@ -39,6 +39,9 @@ public final class Constants {
         }
     }
     public static class DriveConstants{
+
+        public static String nameForShuffleboardDebug;
+
         public static int FRONT_LEFT_MODULE_DRIVE_MOTOR;
         public static int FRONT_LEFT_MODULE_STEER_MOTOR;
         public static int FRONT_LEFT_MODULE_STEER_ENCODER;
@@ -101,6 +104,10 @@ public final class Constants {
             kvVoltSecondsPerMeter = kv;
             kaVoltSecondsSquaredPerMeter = ka;
         }
+
+        public void setNameOfDriveConstant(String name){
+            nameForShuffleboardDebug = name;
+        }
         public static SwerveDriveKinematics kDriveKinematics =
             new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -127,6 +134,7 @@ public final class Constants {
             DRIVE_CONSTANTS.setTrackWidth(0.2921);
             DRIVE_CONSTANTS.setWheelBase(0.2921);
             DRIVE_CONSTANTS.setCharacterizationConstants(0.52717, 0.34344, 0.011638);
+            DRIVE_CONSTANTS.setNameOfDriveConstant("Small Drive");
         }
     }
 
@@ -142,6 +150,7 @@ public final class Constants {
             DRIVE_CONSTANTS.setTrackWidth(0.4953);
             DRIVE_CONSTANTS.setWheelBase(0.4953);
             DRIVE_CONSTANTS.setCharacterizationConstants(0.50673, 0.34619, 0.018907);
+            DRIVE_CONSTANTS.setNameOfDriveConstant("Chronos Drive");
         }
     }
     

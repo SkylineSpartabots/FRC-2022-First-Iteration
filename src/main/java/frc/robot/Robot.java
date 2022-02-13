@@ -109,14 +109,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    if(RobotContainer.checkDriveConstantsChooser() != null){
-      DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
-    }
     m_robotContainer.driveWithJoystick();
   }
 
