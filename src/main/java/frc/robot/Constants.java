@@ -40,8 +40,8 @@ public final class Constants {
     }
     public static class DriveConstants{
 
-        public static String nameForShuffleboardDebug;
-
+        public static String nameForShuffleboardDebug = "none selected";
+        
         public static int FRONT_LEFT_MODULE_DRIVE_MOTOR;
         public static int FRONT_LEFT_MODULE_STEER_MOTOR;
         public static int FRONT_LEFT_MODULE_STEER_ENCODER;

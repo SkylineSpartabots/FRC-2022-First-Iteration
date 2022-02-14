@@ -58,7 +58,7 @@ public class RobotContainer {
     previousYSpeed = 0;
     previousRotSpeed = 0;
 
-    m_chooser.addDefault("Default(small) drive", new Constants.SmallDriveConstants().DRIVE_CONSTANTS);
+    m_chooser.addOption("Default(small) drive", new Constants.SmallDriveConstants().DRIVE_CONSTANTS);
     m_chooser.addOption("Chronos drive", new Constants.ChronosDriveConstants().DRIVE_CONSTANTS);
 
     SmartDashboard.putData(m_chooser);
