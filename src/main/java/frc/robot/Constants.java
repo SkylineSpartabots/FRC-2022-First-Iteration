@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -65,13 +67,6 @@ public final class Constants {
         public static double ksVolts;
         public static double kvVoltSecondsPerMeter;
         public static double kaVoltSecondsSquaredPerMeter;
-        public static SwerveDriveKinematics kDriveKinematics =
-                new SwerveDriveKinematics(
-                        new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-                        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-                        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-                        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
-
         public static double kVelocityGain;
         public static double kMaxAngularSpeedRadiansPerSecond;
         
