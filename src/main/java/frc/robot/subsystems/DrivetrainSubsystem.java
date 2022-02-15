@@ -55,7 +55,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
   private final SwerveDriveOdometry m_odometry;
-  public static final DriveConstants m_driveConstants = new ChronosDriveConstants().DRIVE_CONSTANTS;
+
+  public static DriveConstants m_driveConstants;
+
+  //if boolean smallVsChronos is false, it will default to SmallDriveConstants, otherwise it will become Chronos. The use of a boolean here is bad, but we can replace it if needed by passing in an instance.
+  public static void setDriveConstants(DriveConstants chosenDriveConstants){
+    m_driveConstants = new SmallDriveConstants().DRIVE_CONSTANTS;
+  }
+
   private final SimpleMotorFeedforward m_feedforward;
   private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
@@ -188,6 +195,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
+    SmartDashboard.putString("Current drive", m_driveConstants.nameForShuffleboardDebug);
   }
 
   @Override

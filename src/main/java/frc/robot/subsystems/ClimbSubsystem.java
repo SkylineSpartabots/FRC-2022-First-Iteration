@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.LazyTalonSRX;
@@ -16,7 +19,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -121,6 +125,11 @@ public class ClimbSubsystem extends SubsystemBase {
         setWinchSpeed(desiredState.winchSpeed);
         return interrupted;
     }
+    
+    private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
+    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+    private NetworkTable table = tableInstance.getTable("Shooter");
+
     @Override
     public void periodic() {
         //TODO;
