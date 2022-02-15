@@ -78,8 +78,8 @@ public class DriveCommandFactory {
     var endPose = new Pose2d(0, 0, new Rotation2d(0));
 
     var config = new TrajectoryConfig(
-      DrivetrainSubsystem.MaxSpeedMetersPerSecond, 
-      DrivetrainSubsystem.MaxAccelerationMetersPerSecondSquared)
+      DriveConstants.kMaxSpeedMetersPerSecond, 
+      DriveConstants.kMaxAccelerationMetersPerSecondSquared)
     // Add kinematics to ensure max speed is actually obeyed
     .setKinematics(DrivetrainSubsystem.m_driveConstants.kDriveKinematics);
 
@@ -101,10 +101,10 @@ public class DriveCommandFactory {
     var endPose0 = new Pose2d(-1, -1, new Rotation2d(0));
 
     var config = new TrajectoryConfig(
-      DrivetrainSubsystem.MaxSpeedMetersPerSecond, 
-      DrivetrainSubsystem.MaxAccelerationMetersPerSecondSquared)
+      DriveConstants.kMaxSpeedMetersPerSecond, 
+      DriveConstants.kMaxAccelerationMetersPerSecondSquared)
     // Add kinematics to ensure max speed is actually obeyed
-    .setKinematics(DrivetrainSubsystem.m_driveConstants.kDriveKinematics)
+    .setKinematics(DriveConstants.kDriveKinematics)
     .setEndVelocity(1); // not stop, keep velocity at end
     var trajectory0 = TrajectoryGenerator.generateTrajectory(startPose, wayPoints0, endPose0, config);
 

@@ -107,64 +107,52 @@ public class RobotContainer {
   }
 
   public void driveWithJoystick() {
-    // Get the x speed. We are inverting this because Xbox controllers return
-    // negative values when we push forward.
-    final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
-
-    // Get the y speed or sideways/strafe speed. We are inverting this because
-    // we want a positive value when we pull to the left. Xbox controllers
-    // return positive values when you pull to the right by default.
-    final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
-
-    // Get the rate of angular rotation. We are inverting this because we want a
-    // positive value when we pull to the left (remember, CCW is positive in
-    // mathematics). Xbox controllers return positive values when you pull to
-    // the right by default.
-    var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
-
-    if(modifyAxis(m_controller.getRightX())==0){
-        
-      double tx = findAngle(m_drivetrainSubsystem.getPose(), m_drivetrainSubsystem.getPose().getRotation().getDegrees(), 1, 0);
-      double heading_error = tx;
-      double Kp = 0.1;
-      //double maxSpeed = 2;
-      double steering_adjust = Kp*heading_error;
-      //rot = steering_adjust; //set kp to 0.1
-      //rot=Math.copySign(Math.pow(Math.abs(steering_adjust), 0.75),steering_adjust);//multiplies it by the root of the heading error, keeping sign
-      //rot = Math.abs(steering_adjust)>maxSpeed?maxSpeed:steering_adjust;      
-
-      //double theta = m_thetaController.calculate(m_drivetrainSubsystem.getPose().getRotation().getRadians(), heading_error);
-      //rot = theta;
-    }
+    final var xSpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
+    final var ySpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
+    var rot = -modifyAxis(m_controller.getRightX()) * m_drivetrainSubsystem.m_driveConstants.kMaxAngularSpeedRadiansPerSecond;
     
-    //apply constraints for acceleration and decceleration
-
-    double deltaXVelocity = xSpeed-previousXSpeed;
-    double deltaYVelocity = ySpeed-previousYSpeed;
-    double deltaRotVelocity = Math.abs(rot)-Math.abs(previousRotSpeed);//only controls acceleration but not decceleration
-    //double deltaRotVelocity = (rot)-(previousRotSpeed);
-    double newXSpeed = xSpeed;
-    double newYSpeed = ySpeed;
-    double newRotSpeed = rot;
-
-    if(Math.abs(deltaXVelocity) > DriveConstants.DriveMaxAccelerationPerPeriodic ){
-      newXSpeed = previousXSpeed + Math.copySign(DriveConstants.DriveMaxAccelerationPerPeriodic, deltaXVelocity);
-    }
-    
-    if(Math.abs(deltaYVelocity) > DriveConstants.DriveMaxAccelerationPerPeriodic ){
-      newYSpeed = previousYSpeed + Math.copySign(DriveConstants.DriveMaxAccelerationPerPeriodic, deltaYVelocity);
-    }
-    
-    if(deltaRotVelocity > DriveConstants.RotationMaxAccelerationPerPeriodic ){
-      newRotSpeed = previousRotSpeed + Math.copySign(DriveConstants.RotationMaxAccelerationPerPeriodic, rot-previousRotSpeed);
-    }
-    
-    previousXSpeed = newXSpeed;
-    previousYSpeed = newYSpeed;
-    previousRotSpeed = newRotSpeed;
-
-
     m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
+
+    // if(modifyAxis(m_controller.getRightX())==0){
+      
+    //   double tx = findAngle(m_drivetrainSubsystem.getPose(), m_drivetrainSubsystem.getPose().getRotation().getDegrees(), 1, 0);
+    //   double heading_error = tx;
+    //   double Kp = 0.1;
+    //   //double maxSpeed = 2;
+    //   double steering_adjust = Kp*heading_error;
+    //   //rot = steering_adjust; //set kp to 0.1
+    //   //rot=Math.copySign(Math.pow(Math.abs(steering_adjust), 0.75),steering_adjust);//multiplies it by the root of the heading error, keeping sign
+    //   //rot = Math.abs(steering_adjust)>maxSpeed?maxSpeed:steering_adjust;      
+
+    //   //double theta = m_thetaController.calculate(m_drivetrainSubsystem.getPose().getRotation().getRadians(), heading_error);
+    //   //rot = theta;
+    // }
+    
+    // //apply constraints for acceleration and decceleration
+
+    // double deltaXVelocity = xSpeed-previousXSpeed;
+    // double deltaYVelocity = ySpeed-previousYSpeed;
+    // double deltaRotVelocity = Math.abs(rot)-Math.abs(previousRotSpeed);//only controls acceleration but not decceleration
+    // //double deltaRotVelocity = (rot)-(previousRotSpeed);
+    // double newXSpeed = xSpeed;
+    // double newYSpeed = ySpeed;
+    // double newRotSpeed = rot;
+
+    // if(Math.abs(deltaXVelocity) > DriveConstants.DriveMaxAccelerationPerPeriodic ){
+    //   newXSpeed = previousXSpeed + Math.copySign(DriveConstants.DriveMaxAccelerationPerPeriodic, deltaXVelocity);
+    // }
+    
+    // if(Math.abs(deltaYVelocity) > DriveConstants.DriveMaxAccelerationPerPeriodic ){
+    //   newYSpeed = previousYSpeed + Math.copySign(DriveConstants.DriveMaxAccelerationPerPeriodic, deltaYVelocity);
+    // }
+    
+    // if(deltaRotVelocity > DriveConstants.RotationMaxAccelerationPerPeriodic ){
+    //   newRotSpeed = previousRotSpeed + Math.copySign(DriveConstants.RotationMaxAccelerationPerPeriodic, rot-previousRotSpeed);
+    // }
+    
+    // previousXSpeed = newXSpeed;
+    // previousYSpeed = newYSpeed;
+    // previousRotSpeed = newRotSpeed;
   }
 
   public void resetOdometryFromReference(double threshold){
