@@ -154,6 +154,7 @@ public final class Constants {
     }
 
     public static final class ChronosDriveConstants {
+        //int driveMotor, int steerMotor, int steerEncoder, double steerOffset
         public static final ModulePorts FRONT_LEFT = new ModulePorts(2, 1, 9, -Math.toRadians(301.72576904296875));
         public static final ModulePorts FRONT_RIGHT = new ModulePorts(8, 7, 12, -Math.toRadians(265.9515380859375));
         public static final ModulePorts BACK_LEFT = new ModulePorts(4, 3, 10, -Math.toRadians(246.1761474609375));
@@ -236,6 +237,10 @@ public final class Constants {
         public static final double cargoMassKg = 35.274;
         public static final int kFlywheelMotor = 0;
         public static final double distanceToVelocity = 0.5379;
+    }
+
+    public static final class IntakeConstants {
+        public static final int INTAKE_MOTOR = 31;
     }
 
     public static final class IndexerConstants {

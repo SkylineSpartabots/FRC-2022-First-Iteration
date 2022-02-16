@@ -107,7 +107,7 @@ public class ShooterSubsystem extends SubsystemBase {
         table.getEntry("Flywheel Talon Power").setDouble(mMasterShooter.getMotorOutputPercent());
         table.getEntry("Flywheel RPM").setDouble(rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
         table.getEntry("Shooter On?").setBoolean(true);
-        table.getEntry("Shooter Subsystem").setValue(ShooterSubsystem.instance);
+        //table.getEntry("Shooter Subsystem").setValue(ShooterSubsystem.instance);
     }
 
     @Override

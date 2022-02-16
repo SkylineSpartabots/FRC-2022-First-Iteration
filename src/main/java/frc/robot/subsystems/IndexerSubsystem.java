@@ -53,7 +53,7 @@ public class IndexerSubsystem extends SubsystemBase{
         table.getEntry("Indexer Talon Velocity").setDouble(mIndexerMotor.getSelectedSensorVelocity());
         table.getEntry("Indexer Talon Power").setDouble(mIndexerMotor.getMotorOutputPercent());
         table.getEntry("Indexer On?").setBoolean(true);
-        table.getEntry("Indexer Subsystem").setValue(IndexerSubsystem.instance);
+        //table.getEntry("Indexer Subsystem").setValue(IndexerSubsystem.instance);
     }
 
     @Override

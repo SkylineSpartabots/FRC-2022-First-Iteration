@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import frc.robot.commands.*;
 import frc.robot.commands.drive.DriveCommandFactory;
-import frc.robot.commands.drive.TurnFromOffset;
 import frc.robot.subsystems.*;
 
 /**
@@ -109,7 +108,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
+    //DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
   }
 
   /** This function is called periodically during operator control. */

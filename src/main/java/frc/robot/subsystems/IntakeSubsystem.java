@@ -28,7 +28,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     private IntakeSubsystem(){
-        mIntakeMotor = TalonFXFactory.createDefaultFalcon("Intake Motor", Constants.IndexerConstants.INDEXER_MOTOR);
+        mIntakeMotor = TalonFXFactory.createDefaultFalcon("Intake Motor", Constants.IntakeConstants.INTAKE_MOTOR);
         configureIntakeMotor(mIntakeMotor, false);
     }
 
@@ -40,10 +40,10 @@ public class IntakeSubsystem extends SubsystemBase{
         talon.setNeutralMode(NeutralMode.Coast);
     }
 
-    public void setIntakePowerPercent(double power){
-        mIntakeMotor.set(ControlMode.PercentOutput, power);
+    public void setIntakePowerPercent(){
+        mIntakeMotor.set(ControlMode.PercentOutput, 0.5);
     }
-
+    /*
     private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
     private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
     private NetworkTable table = tableInstance.getTable("Shooter");
@@ -55,7 +55,7 @@ public class IntakeSubsystem extends SubsystemBase{
         table.getEntry("Intake On?").setBoolean(true);
         table.getEntry("Intake Subsystem").setValue(IntakeSubsystem.instance);
     }
-
+    */
     @Override
     public void simulationPeriodic(){
         this.periodic();

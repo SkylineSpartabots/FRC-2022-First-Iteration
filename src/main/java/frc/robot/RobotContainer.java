@@ -11,7 +11,7 @@ import frc.robot.Constants.TurnConstants;
 import frc.robot.commands.IndexerPushCommand;
 import frc.robot.commands.shoot.SingleShootCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -36,7 +36,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
-  private LimelightSubsystem m_limelight;
+  private IntakeSubsystem m_intakeSubsystem;
   private final Controller m_controller = new Controller(new XboxController(0));
   
   private double previousXSpeed;
@@ -60,14 +60,14 @@ public class RobotContainer {
     previousYSpeed = 0;
     previousRotSpeed = 0;
 
-    m_chooser.addOption("Default(small) drive", new Constants.SmallDriveConstants().DRIVE_CONSTANTS);
-    m_chooser.addOption("Chronos drive", new Constants.ChronosDriveConstants().DRIVE_CONSTANTS);
+    
+   // m_chooser.addOption("Default(small) drive", new Constants.ChronosDriveConstants().DRIVE_CONSTANTS);
+    //m_chooser.addOption("Chronos drive", new Constants.SmallDriveConstants().DRIVE_CONSTANTS);
 
     SmartDashboard.putData(m_chooser);
     
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
-    m_limelight = LimelightSubsystem.getInstance();
-    m_limelight.init();
+    m_intakeSubsystem = IntakeSubsystem.getInstance();
 
     m_drivetrainSubsystem.zeroGyroscope();
     // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
@@ -103,6 +103,7 @@ public class RobotContainer {
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
     m_controller.getYButton().whenPressed(new SingleShootCommand(10));
     m_controller.getAButton().whenPressed(new IndexerPushCommand());
+    m_controller.getLeftBumper().whenPressed(m_intakeSubsystem::setIntakePowerPercent);
 
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())
