@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase{
         talon.setInverted(inversion);
         PheonixUtil.checkError(talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs),
             talon.getName() + " failed to set voltage compensation", true);
-        talon.enableVoltageCompensation(true);
+        talon.enableVoltageCompensation(false);
         talon.setNeutralMode(NeutralMode.Coast);
     }
 

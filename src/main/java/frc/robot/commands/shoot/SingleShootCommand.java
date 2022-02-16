@@ -12,7 +12,7 @@ public class SingleShootCommand extends CommandBase{
     private final Timer m_timer = new Timer();
 
     private double shooterPower;
-    private final double m_durationPowerOn = 0.75;
+    private final double m_durationPowerOn = 2;
     //replace this value later and put in constants
 
     public double shooterPowerCalc(double distance){
@@ -30,7 +30,7 @@ public class SingleShootCommand extends CommandBase{
     public void initialize(){
         m_timer.reset();
         m_timer.start();
-        m_subsystem.setMotorPowerVelocity(shooterPower);
+        m_subsystem.setMotorPowerPercent(0.8);
     }
 
     @Override
