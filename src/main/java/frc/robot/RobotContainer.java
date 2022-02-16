@@ -8,6 +8,8 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
+import frc.robot.commands.IndexerPushCommand;
+import frc.robot.commands.shoot.SingleShootCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -99,6 +101,9 @@ public class RobotContainer {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     m_controller.getBButton().whenPressed(this::resetOdometryFromPosition);
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
+    m_controller.getYButton().whenPressed(new SingleShootCommand(10));
+    m_controller.getAButton().whenPressed(new IndexerPushCommand());
+
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())
       .whenActive(this::hardResetOdometryFromReference);
