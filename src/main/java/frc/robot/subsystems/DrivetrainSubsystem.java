@@ -46,12 +46,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MaxSpeedMetersPerSecond = 6380.0 / 60.0 *
-          SdsModuleConfigurations.MK4_L2.getDriveReduction() *
-          SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
 
   // need measure on robot
-  public static final double MaxAccelerationMetersPerSecondSquared = 10; 
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -59,6 +55,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
   private final SwerveDriveOdometry m_odometry;
+
   public static DriveConstants m_driveConstants;
 
   //if boolean smallVsChronos is false, it will default to SmallDriveConstants, otherwise it will become Chronos. The use of a boolean here is bad, but we can replace it if needed by passing in an instance.
@@ -68,9 +65,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final SimpleMotorFeedforward m_feedforward;
   private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-
-  public static final double MaxAngularSpeedRadiansPerSecond = MaxSpeedMetersPerSecond /
-          Math.hypot(m_driveConstants.kTrackWidth / 2.0, m_driveConstants.kWheelBase / 2.0);
 
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
@@ -144,7 +138,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_driveConstants.BACK_RIGHT_MODULE_STEER_OFFSET
     );
 
-    m_odometry = new SwerveDriveOdometry(m_driveConstants.kDriveKinematics, getGyroscopeRotation());
+    m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
 
     m_feedforward = new SimpleMotorFeedforward(m_driveConstants.ksVolts, 
       m_driveConstants.kvVoltSecondsPerMeter, m_driveConstants.kaVoltSecondsSquaredPerMeter);
@@ -210,18 +204,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void applyDrive() {
-    SwerveModuleState[] states = m_driveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MaxSpeedMetersPerSecond);
+    SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMetersPerSecond);
 
     m_frontLeftModule.set(getVoltageByVelocity(states[0].speedMetersPerSecond), states[0].angle.getRadians());
     m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
     m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
     m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
-    // m_frontLeftModule.set(states[0].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
-    // m_frontRightModule.set(states[1].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
-    // m_backLeftModule.set(states[2].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
-    // m_backRightModule.set(states[3].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
+    // m_frontLeftModule.set(states[0].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE , states[0].angle.getRadians());
+    // m_frontRightModule.set(states[1].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
+    // m_backLeftModule.set(states[2].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
+    // m_backRightModule.set(states[3].speedMetersPerSecond / m_driveConstants.kMaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
 
     m_odometry.update(getGyroscopeRotation(), 
         new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
@@ -231,7 +225,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getVoltageByVelocity(double targetVelocity){
-    return m_feedforward.calculate(targetVelocity * m_driveConstants.kMaxSpeedMetersPerSecond);
+    return m_feedforward.calculate(targetVelocity * m_driveConstants.kVelocityGain);
   }
   /*
     Baseline drivetrain logic is assuming target velocity is linear to voltage following 
