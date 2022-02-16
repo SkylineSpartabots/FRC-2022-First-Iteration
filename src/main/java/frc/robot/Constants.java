@@ -205,8 +205,8 @@ public final class Constants {
         public static final double kMinReferenceError = 0.1;
     }
     public static final class ShooterConstants {
-        public static final int MASTER_SHOOTER_MOTOR = 2;
-        public static final int SLAVE_SHOOTER_MOTOR = 3;
+        public static final int MASTER_SHOOTER_MOTOR = 21;
+        public static final int SLAVE_SHOOTER_MOTOR = 22;
 
         public static final double kFlywheelAngle = 0;
         public static final double kFlywheelHeight = 0;
@@ -220,7 +220,7 @@ public final class Constants {
     }
 
     public static final class IndexerConstants {
-        public static final int INDEXER_MOTOR = 9;
+        public static final int INDEXER_MOTOR = 32;
         public static final double indexerSpeedPercent = 0.3;
     }
 
