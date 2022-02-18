@@ -42,8 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
         m_IntakeMotor2.setNeutralMode(NeutralMode.Coast);
     }
 
-    public void setIntakePercent() {
-        m_IntakeMotor.set(ControlMode.PercentOutput, 0.8);
+    public void setIntakePowerPercent(double power) {
+        m_IntakeMotor.set(ControlMode.PercentOutput, power);
     }
 
     private ShuffleboardTab debugTab = Shuffleboard.getTab("Intake");

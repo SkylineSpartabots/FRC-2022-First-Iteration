@@ -241,11 +241,12 @@ public final class Constants {
 
     public static final class IntakeConstants {
         public static final int INTAKE_MOTOR = 31;
+        public static final double intakeSpeedPercent = 0.8;
     }
 
     public static final class IndexerConstants {
         public static final int INDEXER_MOTOR = 32;
-        public static final double indexerSpeedPercent = 0.3;
+        public static final double indexerSpeedPercent = 0.5;
     }
 
     public static final class ClimbConstants {

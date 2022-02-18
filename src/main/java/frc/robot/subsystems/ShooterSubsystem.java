@@ -93,6 +93,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public void setMotorPowerPercent(double power) {
+        //this part extracts only the decimal part of power. TODO: figure out a better approach for dealing with distance based power values that exceed [-1, 1].
+        int intPart = (int) power;
+        if(power > 1){
+            power -= intPart;
+        } else if(power < -1){
+            power += intPart;
+        }
         mMasterShooter.set(ControlMode.PercentOutput, power);
     }
     
