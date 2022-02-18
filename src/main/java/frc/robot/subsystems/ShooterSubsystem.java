@@ -53,6 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterSubsystem() {
         mMasterShooter = TalonFXFactory.createDefaultFalcon("Master Shooter Motor", Constants.ShooterConstants.MASTER_SHOOTER_MOTOR);
 
+        configureShooterMotor(mMasterShooter, InvertType.OpposeMaster);
         //configMasterForShooter(mMasterShooter, InvertType.OpposeMaster, false); //change inverttype for debug. change one at a time
 
 
