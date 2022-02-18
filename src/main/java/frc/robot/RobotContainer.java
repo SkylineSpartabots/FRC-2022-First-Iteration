@@ -103,7 +103,7 @@ public class RobotContainer {
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
     m_controller.getYButton().whenPressed(new SingleShootCommand(10));
     m_controller.getAButton().whenPressed(new IndexerPushCommand());
-    m_controller.getLeftBumper().whenPressed(m_intakeSubsystem::setIntakePowerPercent);
+    m_controller.getLeftBumper().whenPressed(m_intakeSubsystem::setIntakePercent);
 
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())
