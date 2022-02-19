@@ -130,6 +130,7 @@ public class RobotContainer {
     final var ySpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
     var rot = -modifyAxis(m_controller.getRightX()) * m_drivetrainSubsystem.m_driveConstants.kMaxAngularSpeedRadiansPerSecond;
     
+    SmartDashboard.putNumber("Cont. Rot", rot);
     m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
 
     // if(modifyAxis(m_controller.getRightX())==0){

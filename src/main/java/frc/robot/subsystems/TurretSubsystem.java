@@ -1,5 +1,3 @@
-
-/*
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -11,7 +9,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public static final short deviceID = 0;
     public static final TalonFX shooterMotor = new TalonFX(deviceID);
-    public static final double turnCoefficent = Constants.Turret.turnCoefficient;
+    public static final double turnCoefficent = Constants.TurretConstants.turnCoefficient;
     private static DrivetrainSubsystem instance = null;
 
     public static DrivetrainSubsystem getInstance() {
@@ -34,6 +32,4 @@ public class TurretSubsystem extends SubsystemBase {
     public void simulationPeriodic() {
         this.periodic(); //TODO: shuffleboard integration part 2
     }
-
 }
-*/
