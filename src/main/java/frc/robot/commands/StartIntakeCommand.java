@@ -20,7 +20,7 @@ public class StartIntakeCommand extends CommandBase{
     public void initialize(){
         m_timer.reset();
         m_timer.start();
-        m_subsystem.setIntakePowerPercent(Constants.IndexerConstants.indexerSpeedPercent);
+        m_subsystem.setIntakePowerPercent(Constants.IntakeConstants.intakeSpeedPercent);
     }
 
     @Override
