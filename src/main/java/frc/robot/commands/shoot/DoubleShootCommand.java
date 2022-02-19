@@ -10,9 +10,9 @@ public class DoubleShootCommand extends SequentialCommandGroup{
     private final double timeForLaunch = 1.5;
     public DoubleShootCommand(double distance){
         addCommands(
-            new SingleShootCommand(distance),
+            new SingleShootCommand(),
             new IndexerPushCommand(),
-            new SingleShootCommand(distance),
+            new SingleShootCommand(),
             new IndexerPushCommand()
         );/*indexerPush is simply to push the ball into contact with the motor,
         motors will continue moving at velocity speed set by SingleShootCommand(), and will return to normal with ShooterConstantPowerCommand().

@@ -20,10 +20,9 @@ public class SingleShootCommand extends CommandBase{
         return distance*Constants.ShooterConstants.distanceToVelocity + 5.930;
     }
 
-    public SingleShootCommand(double distance){
+    public SingleShootCommand(){
         m_subsystem = ShooterSubsystem.getInstance();
         addRequirements(m_subsystem);
-        shooterPower = shooterPowerCalc(distance);
         
     }
 
@@ -31,7 +30,7 @@ public class SingleShootCommand extends CommandBase{
     public void initialize(){
         m_timer.reset();
         m_timer.start();
-        m_subsystem.setMotorPowerVelocity(shooterPower);
+        m_subsystem.setMotorPowerPercent(0.3);
     }
 
     @Override

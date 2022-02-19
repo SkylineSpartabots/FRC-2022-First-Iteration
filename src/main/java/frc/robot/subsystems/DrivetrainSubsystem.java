@@ -163,6 +163,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    }
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   //return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
   
   public Pose2d getPose(){

@@ -8,7 +8,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShooterConstantPowerCommand extends CommandBase {
     private final ShooterSubsystem m_subsystem;
     //private final Intake m_intake = Intake.getInstance();
-    private final double constantPowerPercent = 0.3;
+    private final double constantPowerPercent = 0.8;
 
     public ShooterConstantPowerCommand(){
         m_subsystem = ShooterSubsystem.getInstance();

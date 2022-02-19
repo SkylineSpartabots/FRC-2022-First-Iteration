@@ -9,7 +9,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
 import frc.robot.commands.IndexerPushCommand;
+import frc.robot.commands.StartIntakeCommand;
 import frc.robot.commands.shoot.IntakeToShooterCommand;
+import frc.robot.commands.shoot.ShooterConstantPowerCommand;
 import frc.robot.commands.shoot.SingleShootCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -103,9 +105,10 @@ public class RobotContainer {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     m_controller.getBButton().whenPressed(this::resetOdometryFromPosition);
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
-    m_controller.getYButton().whenPressed(new SingleShootCommand(10));
+    m_controller.getYButton().whenPressed(new SingleShootCommand());
     m_controller.getAButton().whenPressed(new IndexerPushCommand());
-    m_controller.getLeftBumper().whenPressed(new IntakeToShooterCommand(10));
+    m_controller.getLeftBumper().whenPressed(new StartIntakeCommand());
+    m_controller.getRightBumper().whenPressed(new ShooterConstantPowerCommand());
 
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())
@@ -130,8 +133,9 @@ public class RobotContainer {
     final var ySpeed = -modifyAxis(m_controller.getLeftY()) * DriveConstants.kMaxSpeedMetersPerSecond;
     var rot = -modifyAxis(m_controller.getRightX()) * m_drivetrainSubsystem.m_driveConstants.kMaxAngularSpeedRadiansPerSecond;
     
+    //WARNING THIS IS SKETCHY AND TEMPORARY: USED ONLY TO GET ROBOT ORIENTATION WORKING. XSPEED IS IN THE YSPEED SPOT RIGHT NOW NEED TO SWAP BACK AND FIX ELSEWHERE.
     SmartDashboard.putNumber("Cont. Rot", rot);
-    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
+    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
 
     // if(modifyAxis(m_controller.getRightX())==0){
       

@@ -9,7 +9,7 @@ public class IntakeToShooterCommand extends ParallelCommandGroup{
     public IntakeToShooterCommand(double distance){
         addCommands(
             new StartIntakeCommand(),
-            new SingleShootCommand(distance),
+            new SingleShootCommand(),
             new IndexerPushCommand()
         );
     }
