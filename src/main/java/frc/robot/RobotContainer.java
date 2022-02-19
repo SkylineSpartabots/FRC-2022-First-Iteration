@@ -9,6 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
 import frc.robot.commands.IndexerPushCommand;
+import frc.robot.commands.shoot.IntakeToShooterCommand;
 import frc.robot.commands.shoot.SingleShootCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -43,6 +44,7 @@ public class RobotContainer {
   private double previousYSpeed;
   private double previousRotSpeed;
 
+//TODO: fix choosable sender and debug - might be an issue with starting on teleop.
   public static SendableChooser<DriveConstants> m_chooser = new SendableChooser<DriveConstants>();
   public static DriveConstants checkDriveConstantsChooser(){
     return m_chooser.getSelected();
@@ -103,7 +105,7 @@ public class RobotContainer {
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
     m_controller.getYButton().whenPressed(new SingleShootCommand(10));
     m_controller.getAButton().whenPressed(new IndexerPushCommand());
-    m_controller.getLeftBumper().whenPressed(m_intakeSubsystem::setIntakePercent);
+    m_controller.getLeftBumper().whenPressed(new IntakeToShooterCommand(10));
 
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())

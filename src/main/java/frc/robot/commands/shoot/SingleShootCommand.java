@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.Constants;
 
+//basic command for using shooter. TODO: test power to distance and fine tune.
 public class SingleShootCommand extends CommandBase{
     private final ShooterSubsystem m_subsystem;
     //private final Intake m_intake = Intake.getInstance();
@@ -30,7 +31,7 @@ public class SingleShootCommand extends CommandBase{
     public void initialize(){
         m_timer.reset();
         m_timer.start();
-        m_subsystem.setMotorPowerPercent(0.8);
+        m_subsystem.setMotorPowerVelocity(shooterPower);
     }
 
     @Override
