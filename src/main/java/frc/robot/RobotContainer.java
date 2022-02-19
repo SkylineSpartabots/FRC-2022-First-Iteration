@@ -103,8 +103,8 @@ public class RobotContainer {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     m_controller.getBButton().whenPressed(this::resetOdometryFromPosition);
     m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
-    m_controller.getYButton().whenPressed(new SingleShootCommand(10));
-    m_controller.getAButton().whenPressed(new IndexerPushCommand());
+    m_controller.getYButton().toggleWhenPressed(new SingleShootCommand(10));
+    m_controller.getAButton().toggleWhenPressed(new IndexerPushCommand());
     m_controller.getLeftBumper().whenPressed(new IntakeToShooterCommand(10));
 
     
