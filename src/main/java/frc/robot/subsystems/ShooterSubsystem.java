@@ -41,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private double distanceToLowerBucket = distanceToHub * Math.sin(some angle, dependon on height of shooter and the actual height of hub)
     */
 
-    private final LazyTalonFX mMasterShooter; //mSlaveShooter;
+    private final LazyTalonFX mMasterShooter, mSlaveShooter;
         
     public static ShooterSubsystem getInstance() {
         if (instance == null) {
@@ -53,13 +53,13 @@ public class ShooterSubsystem extends SubsystemBase {
     private ShooterSubsystem() {
         mMasterShooter = TalonFXFactory.createDefaultFalcon("Master Shooter Motor", Constants.ShooterConstants.MASTER_SHOOTER_MOTOR);
 
-        configureShooterMotor(mMasterShooter, InvertType.FollowMaster);
+        configureShooterMotor(mMasterShooter, InvertType.InvertMotorOutput); //slave is none, master is oppose, set as masteer/oppose and then invert slave config
         //configMasterForShooter(mMasterShooter, InvertType.OpposeMaster, false); //change inverttype for debug. change one at a time
 
 
-        //mSlaveShooter = TalonFXFactory.createSlaveFalcon("Slave Shooter Motor", Constants.ShooterConstants.SLAVE_SHOOTER_MOTOR, Constants.ShooterConstants.MASTER_SHOOTER_MOTOR);
-        //configFalconForShooter(mSlaveShooter, InvertType.FollowMaster); //change follow master for debug. change one at a time
-        //mSlaveShooter.setMaster(mMasterShooter);
+        mSlaveShooter = TalonFXFactory.createSlaveFalcon("Slave Shooter Motor", Constants.ShooterConstants.SLAVE_SHOOTER_MOTOR, Constants.ShooterConstants.MASTER_SHOOTER_MOTOR);
+        configFalconForShooter(mSlaveShooter, InvertType.OpposeMaster); //change follow master for debug. change one at a time
+        mSlaveShooter.setMaster(mMasterShooter);
 
         SmartDashboard.putNumber("Shooter kP", 0.0);
         SmartDashboard.putNumber("Shooter kI", 0.000022);
