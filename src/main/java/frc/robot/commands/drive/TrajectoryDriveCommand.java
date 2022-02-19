@@ -43,7 +43,7 @@ public class TrajectoryDriveCommand extends CommandBase {
 
     m_config = new TrajectoryConfig(1, 1)//speed set to 0.5 m/s, acceleration of 1 m/s
       // Add kinematics to ensure max speed is actually obeyed
-      .setKinematics(DriveConstants.kDriveKinematics);
+      .setKinematics(DrivetrainSubsystem.m_driveConstants.kDriveKinematics);
     
     m_trajectory = TrajectoryGenerator.generateTrajectory(m_subsystem.getPose(), p_interiorWaypoints, p_end, m_config);
     m_endRotation = p_end.getRotation();

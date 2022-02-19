@@ -140,7 +140,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_driveConstants.BACK_RIGHT_MODULE_STEER_OFFSET
     );
 
-    m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
+    m_odometry = new SwerveDriveOdometry(m_driveConstants.kDriveKinematics, getGyroscopeRotation());
 
     m_feedforward = new SimpleMotorFeedforward(m_driveConstants.ksVolts, 
       m_driveConstants.kvVoltSecondsPerMeter, m_driveConstants.kaVoltSecondsSquaredPerMeter);
@@ -206,8 +206,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void applyDrive() {
-    SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
+    SmartDashboard.putNumber("Omega", m_chassisSpeeds.omegaRadiansPerSecond);
+
+    SwerveModuleState[] states = m_driveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    SmartDashboard.putNumber("Speed 1", states[0].speedMetersPerSecond);
+    SmartDashboard.putNumber("Speed 2", states[1].speedMetersPerSecond);
+    SmartDashboard.putNumber("Speed 3", states[2].speedMetersPerSecond);
+    SmartDashboard.putNumber("Speed 4", states[3].speedMetersPerSecond);
 
     m_frontLeftModule.set(getVoltageByVelocity(states[0].speedMetersPerSecond), states[0].angle.getRadians());
     m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());

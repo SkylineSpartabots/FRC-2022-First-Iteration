@@ -45,32 +45,43 @@ public final class Constants {
     }
 
     public static class DriveConstants{
-        public static String nameForShuffleboardDebug = "none selected";
-        public static int FRONT_LEFT_MODULE_DRIVE_MOTOR;
-        public static int FRONT_LEFT_MODULE_STEER_MOTOR;
-        public static int FRONT_LEFT_MODULE_STEER_ENCODER;
-        public static double FRONT_LEFT_MODULE_STEER_OFFSET;
-        public static int FRONT_RIGHT_MODULE_DRIVE_MOTOR;
-        public static int FRONT_RIGHT_MODULE_STEER_MOTOR;
-        public static int FRONT_RIGHT_MODULE_STEER_ENCODER;
-        public static double FRONT_RIGHT_MODULE_STEER_OFFSET;
-        public static int BACK_LEFT_MODULE_DRIVE_MOTOR;
-        public static int BACK_LEFT_MODULE_STEER_MOTOR;
-        public static int BACK_LEFT_MODULE_STEER_ENCODER;
-        public static double BACK_LEFT_MODULE_STEER_OFFSET;
-        public static int BACK_RIGHT_MODULE_DRIVE_MOTOR;
-        public static int BACK_RIGHT_MODULE_STEER_MOTOR;
-        public static int BACK_RIGHT_MODULE_STEER_ENCODER;
-        public static double BACK_RIGHT_MODULE_STEER_OFFSET;
-        public static double kTrackWidth;
-        public static double kWheelBase;
-        public static double ksVolts;
-        public static double kvVoltSecondsPerMeter;
-        public static double kaVoltSecondsSquaredPerMeter;
-        public static double kVelocityGain;
-        public static double kMaxAngularSpeedRadiansPerSecond;
+        public String nameForShuffleboardDebug = "none selected";
+        public int FRONT_LEFT_MODULE_DRIVE_MOTOR;
+        public int FRONT_LEFT_MODULE_STEER_MOTOR;
+        public int FRONT_LEFT_MODULE_STEER_ENCODER;
+        public double FRONT_LEFT_MODULE_STEER_OFFSET;
+        public int FRONT_RIGHT_MODULE_DRIVE_MOTOR;
+        public int FRONT_RIGHT_MODULE_STEER_MOTOR;
+        public int FRONT_RIGHT_MODULE_STEER_ENCODER;
+        public double FRONT_RIGHT_MODULE_STEER_OFFSET;
+        public int BACK_LEFT_MODULE_DRIVE_MOTOR;
+        public int BACK_LEFT_MODULE_STEER_MOTOR;
+        public int BACK_LEFT_MODULE_STEER_ENCODER;
+        public double BACK_LEFT_MODULE_STEER_OFFSET;
+        public int BACK_RIGHT_MODULE_DRIVE_MOTOR;
+        public int BACK_RIGHT_MODULE_STEER_MOTOR;
+        public int BACK_RIGHT_MODULE_STEER_ENCODER;
+        public double BACK_RIGHT_MODULE_STEER_OFFSET;
+        public double kTrackWidth;
+        public double kWheelBase;
+        public double ksVolts;
+        public double kvVoltSecondsPerMeter;
+        public double kaVoltSecondsSquaredPerMeter;
+        public double kVelocityGain;
+        public double kMaxAngularSpeedRadiansPerSecond;
+        public SwerveDriveKinematics kDriveKinematics;
         
-        public DriveConstants(ModulePorts frontLeft, ModulePorts frontRight, ModulePorts backLeft, ModulePorts backRight){
+        public static final double kMaxSpeedMetersPerSecond = 6380.0 / 60.0 *
+            SdsModuleConfigurations.MK4_L2.getDriveReduction() *
+            SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
+
+        public static final double kMaxAccelerationMetersPerSecondSquared = 10; 
+        public static final boolean kGyroReversed = false;
+
+        public static final double DriveMaxAccelerationPerPeriodic =  20.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
+        public static final double RotationMaxAccelerationPerPeriodic =  100.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
+
+        public DriveConstants(ModulePorts frontLeft, ModulePorts frontRight, ModulePorts backLeft, ModulePorts backRight, double wheelBase, double trackWidth){
             FRONT_LEFT_MODULE_DRIVE_MOTOR = frontLeft.DRIVE_MOTOR;
             FRONT_LEFT_MODULE_STEER_MOTOR = frontLeft.STEER_MOTOR;
             FRONT_LEFT_MODULE_STEER_ENCODER = frontLeft.STEER_ENCODER;
@@ -90,17 +101,15 @@ public final class Constants {
             BACK_RIGHT_MODULE_STEER_MOTOR = backRight.STEER_MOTOR;
             BACK_RIGHT_MODULE_STEER_ENCODER = backRight.STEER_ENCODER;
             BACK_RIGHT_MODULE_STEER_OFFSET = backRight.STEER_OFFSET;
-        }
 
-        public void setWheelBase(double wheelBase) {
             kWheelBase = wheelBase;
-        }
-
-        public void setTrackWidth(double trackWidth) {
             kTrackWidth = trackWidth;
-        }
+            kDriveKinematics = new SwerveDriveKinematics(
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        public void setMaxAngularSpeed(){
             kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
         }
 
@@ -116,22 +125,6 @@ public final class Constants {
         public void setNameOfDriveConstant(String name){
             nameForShuffleboardDebug = name;
         }
-        public static SwerveDriveKinematics kDriveKinematics =
-            new SwerveDriveKinematics(
-                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
-        
-        public static final double kMaxSpeedMetersPerSecond = 6380.0 / 60.0 *
-            SdsModuleConfigurations.MK4_L2.getDriveReduction() *
-            SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
-
-        public static final double kMaxAccelerationMetersPerSecondSquared = 10; 
-        public static final boolean kGyroReversed = false;
-
-        public static final double DriveMaxAccelerationPerPeriodic =  20.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
-        public static final double RotationMaxAccelerationPerPeriodic =  100.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
     }
 
     public static final class SmallDriveConstants {
@@ -140,15 +133,11 @@ public final class Constants {
         public static final ModulePorts BACK_LEFT = new ModulePorts(4, 5, 10, -Math.toRadians(123.4863));
         public static final ModulePorts BACK_RIGHT = new ModulePorts(6, 7, 11, -Math.toRadians(157.2363));
 
-        public static DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+        public DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT, 0.2921, 0.2921);
 
         public SmallDriveConstants() {
-            DRIVE_CONSTANTS.setTrackWidth(0.2921);
-            DRIVE_CONSTANTS.setWheelBase(0.2921);
             DRIVE_CONSTANTS.setCharacterizationConstants(0.52717, 0.34344, 0.011638);
-
             DRIVE_CONSTANTS.setVelocityGain(4);
-            DRIVE_CONSTANTS.setMaxAngularSpeed();
             DRIVE_CONSTANTS.setNameOfDriveConstant("Small Drive");
         }
     }
@@ -160,15 +149,11 @@ public final class Constants {
         public static final ModulePorts BACK_LEFT = new ModulePorts(4, 3, 10, -Math.toRadians(246.1761474609375));
         public static final ModulePorts BACK_RIGHT = new ModulePorts(6, 5, 11, -Math.toRadians(234.228515625));
 
-        public static DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT);
+        public DriveConstants DRIVE_CONSTANTS = new DriveConstants(FRONT_LEFT, FRONT_RIGHT, BACK_LEFT, BACK_RIGHT, 0.4953, 0.4953);
 
         public ChronosDriveConstants() {
-            DRIVE_CONSTANTS.setTrackWidth(0.4953);
-            DRIVE_CONSTANTS.setWheelBase(0.4953);
             DRIVE_CONSTANTS.setCharacterizationConstants(0.50673, 0.34619, 0.018907);
-            
             DRIVE_CONSTANTS.setVelocityGain(6);
-            DRIVE_CONSTANTS.setMaxAngularSpeed();
             DRIVE_CONSTANTS.setNameOfDriveConstant("Chronos Drive");
         }
     }
@@ -264,7 +249,7 @@ public final class Constants {
         public static final int CLIMB_SLAVE_WINCH_ID = 0;
     }
 
-    public static final class Turret {
+    public static final class TurretConstants {
         /*
          *  TODO: ensure that this is a real number. the "0.1" i shoved here is arbitrary
          *   because either me or build is too lazy to build a turret and figure out constants
