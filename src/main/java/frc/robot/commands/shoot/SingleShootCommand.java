@@ -12,7 +12,7 @@ public class SingleShootCommand extends CommandBase{
     private final Timer m_timer = new Timer();
 
     private double shooterPower;
-    private final double m_durationPowerOn = 2;
+    private final double m_durationPowerOn = 20;
     //replace this value later and put in constants
 
     public double shooterPowerCalc(double distance){
