@@ -112,7 +112,6 @@ public final class Constants {
 
             kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond / Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
         }
-
         public void setCharacterizationConstants(double ks, double kv, double ka){
             ksVolts = ks;
             kvVoltSecondsPerMeter = kv;
