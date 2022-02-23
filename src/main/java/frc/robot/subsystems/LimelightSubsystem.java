@@ -5,6 +5,8 @@ import frc.robot.Constants.FieldConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class LimelightSubsystem extends SubsystemBase {
@@ -70,11 +72,16 @@ public class LimelightSubsystem extends SubsystemBase {
         return nt.getEntry("ty").getDouble(0.0);
     }
 
+    private ShuffleboardTab debugTab = Shuffleboard.getTab("Limelight");
+
   @Override
   public void periodic() {
     //post to smart dashboard periodically
-    SmartDashboard.putNumber("LimelightX", getXOffset());
-    SmartDashboard.putNumber("LimelightY", getYOffset());
+    // SmartDashboard.putNumber("LimelightX", getXOffset());
+    // SmartDashboard.putNumber("LimelightY", getYOffset());
+
+    debugTab.add("LimelightX", getXOffset());
+    debugTab.add("LimelightY", getYOffset());
   }
   
   @Override

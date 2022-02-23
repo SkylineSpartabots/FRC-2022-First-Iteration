@@ -5,13 +5,9 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
-import frc.lib.drivers.LazyTalonSRX;
 import frc.lib.drivers.PheonixUtil;
 import frc.lib.drivers.TalonFXFactory;
-import frc.lib.drivers.TalonSRXUtil;
 import frc.robot.Constants;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -59,16 +55,13 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private ShuffleboardTab debugTab = Shuffleboard.getTab("Intake");
-    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = tableInstance.getTable("Intake");
 
     @Override
     public void periodic() {
-        table.getEntry("Intake Supply Current").setDouble(m_IntakeMotor.getSupplyCurrent());
-        table.getEntry("Intake Stator Current").setDouble(m_IntakeMotor.getStatorCurrent());
-        table.getEntry("Intake Supply Current").setDouble(m_IntakeMotor.getLastSet());
-        table.getEntry("Intake Right Solenoid State").setBoolean(m_RightSolenoidMotor.get());
-        table.getEntry("Intake Left Solenoid State").setBoolean(m_LeftSolenoidMotor.get());
+        debugTab.add("Intake Supply Current", m_IntakeMotor.getSupplyCurrent());
+        debugTab.add("Intake Stator Current", m_IntakeMotor.getStatorCurrent());
+        debugTab.add("Intake Supply Current", m_IntakeMotor.getLastSet());
+        debugTab.add("Intake Solenoid State", m_RightSolenoidMotor.get());
     }
 
     @Override
