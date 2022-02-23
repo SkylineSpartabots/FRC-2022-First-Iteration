@@ -189,16 +189,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+  private ShuffleboardTab debugTab = Shuffleboard.getTab("Drivetrain");
+
   @Override
   public void periodic() {
     var pose = m_odometry.getPoseMeters();
 
     //TODO:
     //Refactor to shuffleboard tab
-    SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
-    SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
-    SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
-    SmartDashboard.putString("Current drive", m_driveConstants.nameForShuffleboardDebug);
+    // SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+    // SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    // SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
+    // SmartDashboard.putString("Current drive", m_driveConstants.nameForShuffleboardDebug);
+
+    debugTab.add("X Position", pose.getTranslation().getX());
+    debugTab.add("Y Position", pose.getTranslation().getY());
+    debugTab.add("Rotation", getGyroscopeRotation().getDegrees());
+    debugTab.add("Current Drive", m_driveConstants.nameForShuffleboardDebug);
   }
 
   @Override

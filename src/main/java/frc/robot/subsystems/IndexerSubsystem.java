@@ -3,9 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,7 +15,7 @@ import frc.robot.Constants.IndexerConstants;
 public class IndexerSubsystem extends SubsystemBase{
     private static IndexerSubsystem instance = null;
 
-    private final LazyTalonFX mIndexerMotor;
+    private final LazyTalonFX m_IndexerMotor;
 
     public static IndexerSubsystem getInstance(){
         if(instance == null){
@@ -28,8 +25,8 @@ public class IndexerSubsystem extends SubsystemBase{
     }
 
     private IndexerSubsystem(){
-        mIndexerMotor = TalonFXFactory.createDefaultFalcon("Indexer Motor", Constants.IndexerConstants.INDEXER_MOTOR);
-        configureIndexerMotor(mIndexerMotor, false);
+        m_IndexerMotor = TalonFXFactory.createDefaultFalcon("Indexer Motor", Constants.IndexerConstants.INDEXER_MOTOR);
+        configureIndexerMotor(m_IndexerMotor, false);
     }
 
     private void configureIndexerMotor (LazyTalonFX talon, boolean inversion){
@@ -41,19 +38,16 @@ public class IndexerSubsystem extends SubsystemBase{
     }
 
     public void setIndexerPowerPercent(double power){
-        mIndexerMotor.set(ControlMode.PercentOutput, power);
+        m_IndexerMotor.set(ControlMode.PercentOutput, power);
     }
 
-    private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
-    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = tableInstance.getTable("Shooter");
+    private ShuffleboardTab debugTab = Shuffleboard.getTab("Indexer");
 
     @Override
     public void periodic() {
-        table.getEntry("Indexer Talon Velocity").setDouble(mIndexerMotor.getSelectedSensorVelocity());
-        table.getEntry("Indexer Talon Power").setDouble(mIndexerMotor.getMotorOutputPercent());
-        table.getEntry("Indexer On?").setBoolean(true);
-        //table.getEntry("Indexer Subsystem").setValue(IndexerSubsystem.instance);
+        debugTab.add("Indexer Talon Velocity", m_IndexerMotor.getSelectedSensorVelocity());
+        debugTab.add("Indexer Talon Power", m_IndexerMotor.getMotorOutputPercent());
+        debugTab.add("Indexer On?", true);
     }
 
     @Override

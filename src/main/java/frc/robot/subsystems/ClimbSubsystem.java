@@ -126,9 +126,7 @@ public class ClimbSubsystem extends SubsystemBase {
         return interrupted;
     }
     
-    private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
-    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = tableInstance.getTable("Shooter");
+    private ShuffleboardTab debugTab = Shuffleboard.getTab("Climb");
 
     @Override
     public void periodic() {

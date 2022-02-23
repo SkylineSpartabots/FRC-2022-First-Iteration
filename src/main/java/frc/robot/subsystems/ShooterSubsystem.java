@@ -104,19 +104,17 @@ public class ShooterSubsystem extends SubsystemBase {
     }
     
     private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
-    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = tableInstance.getTable("Shooter");
-
+    
     @Override
     public void periodic() {
         //THIS IS EXACTLY HOW ALL SUBSYSTEM PERIODIC FUNCTIONS SHOULD LOOK!!! THIS IS FIRE
         //IDK WHO WROTE IT BUT YOURE A BALLER lmao hi zach
-        table.getEntry("Flywheel Talon Velocity").setDouble(mMasterShooter.getSelectedSensorVelocity());
-        table.getEntry("Flywheel Talon Power").setDouble(mMasterShooter.getMotorOutputPercent());
+        // table.getEntry("Flywheel Talon Velocity").setDouble(mMasterShooter.getSelectedSensorVelocity());
+        // table.getEntry("Flywheel Talon Power").setDouble(mMasterShooter.getMotorOutputPercent());
         //table.getEntry("Flywheel RPM").setDouble(rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Flywheel RPM", rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
         SmartDashboard.putNumber("Flywheel Velo", mMasterShooter.getSelectedSensorVelocity());
-        table.getEntry("Shooter On?").setBoolean(true);
+        // table.getEntry("Shooter On?").setBoolean(true);
         //debugTab.add(ShooterSubsystem.getInstance());
     }
 
