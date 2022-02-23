@@ -224,8 +224,12 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int INTAKE_MOTOR = 31;
+        public static final int PCM_ID = 1;
+        public static final int RIGHT_SOLENOID_CHANNEL = 0;
+        public static final int LEFT_SOLENOID_CHANNEL = 0;
+        public static final int INTAKE_MOTOR_ID = 31;
         public static final double intakeSpeedPercent = 0.8;
+
     }
 
     public static final class IndexerConstants {
