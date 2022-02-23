@@ -8,9 +8,10 @@ import frc.robot.commands.StartIntakeCommand;
 public class IntakeToShooterCommand extends ParallelCommandGroup{
     public IntakeToShooterCommand(double distance){
         addCommands(
-            new StartIntakeCommand(),
-            new SingleShootCommand(),
-            new IndexerPushCommand()
+            //TODO: INTEGRATE CONTROLLER PARAM FOR INTAKE INTERRUPT
+            //new StartIntakeCommand(),
+            new SingleShootCommand()
+            //new IndexerPushCommand()
         );
     }
 }

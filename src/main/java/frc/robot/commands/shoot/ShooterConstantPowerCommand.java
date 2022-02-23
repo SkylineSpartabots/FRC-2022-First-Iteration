@@ -1,6 +1,8 @@
 
 package frc.robot.commands.shoot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -9,8 +11,9 @@ public class ShooterConstantPowerCommand extends CommandBase {
     private final ShooterSubsystem m_subsystem;
     //private final Intake m_intake = Intake.getInstance();
     private final double constantPowerPercent = 0.5;
-
-    public ShooterConstantPowerCommand(){
+    private BooleanSupplier executingSupplier;
+    public ShooterConstantPowerCommand(BooleanSupplier buttonSupplier){
+        executingSupplier = buttonSupplier;
         m_subsystem = ShooterSubsystem.getInstance();
         addRequirements(m_subsystem);
     }
@@ -28,5 +31,10 @@ public class ShooterConstantPowerCommand extends CommandBase {
     public void end(boolean interrupted){
         //Set motor percent to low constant power TBD later
         m_subsystem.setMotorPowerPercent(0.0);
+    }
+
+    @Override
+    public boolean isFinished(){
+        return !executingSupplier.getAsBoolean();
     }
 }

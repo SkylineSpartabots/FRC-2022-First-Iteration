@@ -84,8 +84,8 @@ public class ShooterSubsystem extends SubsystemBase {
         falcon.setNeutralMode(NeutralMode.Coast);
     }
 
-    private double rawVeloToRpm(double velo) {
-        return velo / ShooterConstants.kFalconVeloRpmFactor;
+    private double rawVeloToRpm(double sensorUnits) {
+        return sensorUnits / (ShooterConstants.kMaxRPM / 600);
     }
 
     public void setMotorPowerVelocity(double power) {
@@ -113,9 +113,11 @@ public class ShooterSubsystem extends SubsystemBase {
         //IDK WHO WROTE IT BUT YOURE A BALLER lmao hi zach
         table.getEntry("Flywheel Talon Velocity").setDouble(mMasterShooter.getSelectedSensorVelocity());
         table.getEntry("Flywheel Talon Power").setDouble(mMasterShooter.getMotorOutputPercent());
-        table.getEntry("Flywheel RPM").setDouble(rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
+        //table.getEntry("Flywheel RPM").setDouble(rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
+        SmartDashboard.putNumber("Flywheel RPM", rawVeloToRpm(mMasterShooter.getSelectedSensorVelocity()));
+        SmartDashboard.putNumber("Flywheel Velo", mMasterShooter.getSelectedSensorVelocity());
         table.getEntry("Shooter On?").setBoolean(true);
-        debugTab.add(ShooterSubsystem.getInstance());
+        //debugTab.add(ShooterSubsystem.getInstance());
     }
 
     @Override
