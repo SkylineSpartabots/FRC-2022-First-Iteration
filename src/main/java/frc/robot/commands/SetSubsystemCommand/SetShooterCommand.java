@@ -1,19 +1,21 @@
-package frc.robot.commands.EndSubsystemCommand;
+package frc.robot.commands.SetSubsystemCommand;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class EndShooterCommand extends CommandBase {
+public class SetShooterCommand extends CommandBase {
     private final ShooterSubsystem m_subsystem;
+    private double percentPower;
 
-    public EndShooterCommand() {
+    public SetShooterCommand(double percentPower) {
         m_subsystem = ShooterSubsystem.getInstance();
         addRequirements(m_subsystem);
+        this.percentPower = percentPower;
     }
 
     @Override
     public void initialize() {
-        m_subsystem.setShooterPercentPower(0.0);
+        m_subsystem.setShooterPercentPower(percentPower);
     }
 
     @Override

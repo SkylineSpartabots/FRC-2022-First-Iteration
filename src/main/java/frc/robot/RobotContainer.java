@@ -6,9 +6,9 @@ package frc.robot;
 import frc.lib.util.Controller;
 import frc.robot.commands.AutonomousCommandFactory;
 import frc.robot.commands.TeleopDriveCommand;
-import frc.robot.commands.StartSubsystemCommand.StartIndexerCommand;
-import frc.robot.commands.StartSubsystemCommand.StartIntakeCommand;
-import frc.robot.commands.StartSubsystemCommand.StartShooterCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
+import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -59,8 +59,6 @@ public class RobotContainer {
   // configures button bindings to controller
   private void configureButtonBindings() {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);
-    m_controller.getBButton().toggleWhenPressed(new StartIntakeCommand());
-    m_controller.getXButton().toggleWhenPressed(new StartIndexerCommand());
   }
 
 }

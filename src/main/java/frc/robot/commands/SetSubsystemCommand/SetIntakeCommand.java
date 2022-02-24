@@ -1,19 +1,21 @@
-package frc.robot.commands.StartSubsystemCommand;
+package frc.robot.commands.SetSubsystemCommand;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class StartIntakeCommand extends CommandBase {
+public class SetIntakeCommand extends CommandBase {
     private final IntakeSubsystem m_subsystem;
+    private double percentPower;
 
-    public StartIntakeCommand() {
+    public SetIntakeCommand(double percentPower) {
         m_subsystem = IntakeSubsystem.getInstance();
         addRequirements(m_subsystem);
+        this.percentPower = percentPower;
     }
 
     @Override
     public void initialize() {
-        m_subsystem.setIntakePercentPower(0.8);
+        m_subsystem.setIntakePercentPower(percentPower);
     }
 
     @Override
