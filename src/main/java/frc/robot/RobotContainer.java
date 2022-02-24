@@ -4,22 +4,17 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutonomousCommandFactory;
-import frc.robot.commands.StartIndexerCommand;
-import frc.robot.commands.StartIntakeCommand;
-import frc.robot.commands.StartShooterCommand;
+import frc.robot.commands.TeleopDriveCommand;
+import frc.robot.commands.StartSubsystemCommand.StartIndexerCommand;
+import frc.robot.commands.StartSubsystemCommand.StartIntakeCommand;
+import frc.robot.commands.StartSubsystemCommand.StartShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 
 /**
@@ -31,7 +26,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
-  private final Controller m_controller = new Controller(new XboxController(0));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,6 +40,8 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandFinish(command ->Shuffleboard.addEventMarker(
         "Command finished", command.getName(), EventImportance.kNormal));
 
+    CommandScheduler.getInstance().setDefaultCommand(DrivetrainSubsystem.getInstance(), new TeleopDriveCommand());
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -53,79 +49,14 @@ public class RobotContainer {
     AutonomousCommandFactory.swapAutonomousCommands();
   }
 
+  
+  private final Controller m_controller = new Controller(new XboxController(0));
   //configures button bindings to controller
   private void configureButtonBindings() {
-    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);
     m_controller.getBButton().toggleWhenPressed(new StartIntakeCommand());
     m_controller.getXButton().toggleWhenPressed(new StartIndexerCommand());
     m_controller.getAButton().toggleWhenPressed(new StartShooterCommand());
   }
-
-  public DrivetrainSubsystem getDriveTrainSubsystem()
-  {
-    return m_drivetrainSubsystem;
-  }
-
-  public void driveWithJoystick() {
-    //get joystick input for drive
-    final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
-    final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
-    var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
-
-    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
-  }
   
-  public void resetOdometryFromReference(double threshold){
-    Translation2d current = m_drivetrainSubsystem.getPose().getTranslation();
-    double minError = FieldConstants.kMinReferenceError;
-    Translation2d newPos = null;
-    for(Translation2d ref : FieldConstants.kReferenceTranslations){
-      double errorX = Math.abs(ref.getX() - current.getX());
-      double errorY = Math.abs(ref.getY() - current.getY());
-      double error = Math.min(minError, Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2)));
-      if(error < minError){
-        newPos = ref;
-        minError = error;
-      }
-    }
-    if(minError < FieldConstants.kMinReferenceError){
-      m_drivetrainSubsystem.resetOdometry(new Pose2d(newPos, m_drivetrainSubsystem.getGyroscopeRotation()));
-      SmartDashboard.putBoolean("Too Far From Reference", false);
-    }
-    else
-      SmartDashboard.putBoolean("Too Far From Reference", true);
-  }
-
-  public void softResetOdometryFromReference(){
-    resetOdometryFromReference(FieldConstants.kMinReferenceError);
-  }
-  public void hardResetOdometryFromReference(){
-    resetOdometryFromReference(100d);
-  }
-
-  public void resetOdometryFromPosition(){
-     m_drivetrainSubsystem.resetOdometry(new Pose2d());
-  } 
-  
-  public static double applyDeadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0) {
-        return (value - deadband) / (1.0 - deadband);
-      } else {
-        return (value + deadband) / (1.0 - deadband);
-      }
-    } else {
-      return 0.0;
-    }
-  }
-
-  private static double modifyAxis(double value) {
-    // Deadband
-    value = applyDeadband(value, 0.1);
-
-    // Square the axis
-    value = Math.copySign(value * value, value);
-
-    return value;
-  }
 }

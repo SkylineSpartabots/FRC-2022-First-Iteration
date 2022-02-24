@@ -11,7 +11,7 @@ import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.PheonixUtil;
 import frc.lib.drivers.TalonFXFactory;
 import frc.robot.Constants;
-import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StartSubsystemCommand.StartIntakeCommand;
 
 public class IntakeSubsystem extends SubsystemBase{   
 

@@ -1,8 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.StartSubsystemCommand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 
-//turns on the intake. TODO: figure out optimal/prefered intake speed.
 public class StartShooterCommand extends CommandBase{
     private final ShooterSubsystem m_subsystem;
 

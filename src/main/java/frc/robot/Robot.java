@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
-    DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d());
+    DrivetrainSubsystem.getInstance().resetOdometry();
     m_autonomousCommand = AutonomousCommandFactory.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    m_robotContainer.driveWithJoystick();
+
   }
 
   

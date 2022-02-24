@@ -21,7 +21,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
     //timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
-    
+
     public static final class DriveConstants {
         
         public static final double kTrackWidth = 0.2921;
@@ -37,20 +37,6 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
                 public static final boolean kGyroReversed = false;
-
-        // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-        // These characterization values MUST be determined either experimentally or theoretically
-        // for *your* robot's drive.
-        // The SysId tool provides a convenient method for obtaining these values for your robot.
-        public static final double ksVolts = 1;
-        public static final double kvVoltSecondsPerMeter = 0.8;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.15;
-    
-        public static final double kMaxSpeedMetersPerSecond = 3;
-
-        
-        public static final double DriveMaxAccelerationPerPeriodic =  20.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
-        public static final double RotationMaxAccelerationPerPeriodic =  100.0 / 200.0 ; //max acceleration, then, divide by 200 for 200 times per second
 
     }
 
@@ -71,21 +57,4 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
-    public static final class FieldConstants{
-        //Meters, degrees
-        public static final double kTargetHeight = 2.36474;
-        public static final double kLensHeight = 2.36474;
-        public static final double kLensAngle = 1;
-
-        public static final Translation2d kTargetTranslation = new Translation2d(0,0);
-        public static final List<Translation2d> kStartingTranslations = List.of(
-            new Translation2d()
-        );
-        public static final List<Translation2d> kReferenceTranslations = List.of(
-            new Translation2d(1, 0),
-            new Translation2d(3, 3)
-        );
-
-        public static final double kMinReferenceError = 0.1;
-    }
 }

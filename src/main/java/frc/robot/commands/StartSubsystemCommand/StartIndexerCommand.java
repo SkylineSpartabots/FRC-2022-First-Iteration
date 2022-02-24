@@ -1,9 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.StartSubsystemCommand;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 
-//turns on the intake. TODO: figure out optimal/prefered intake speed.
 public class StartIndexerCommand extends CommandBase{
     private final IndexerSubsystem m_subsystem;
 
