@@ -4,19 +4,17 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutonomousCommandFactory;
+import frc.robot.commands.StartIndexerCommand;
 import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StartShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Button;
 
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -55,15 +53,12 @@ public class RobotContainer {
     AutonomousCommandFactory.swapAutonomousCommands();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
+  //configures button bindings to controller
   private void configureButtonBindings() {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     m_controller.getBButton().toggleWhenPressed(new StartIntakeCommand());
+    m_controller.getXButton().toggleWhenPressed(new StartIndexerCommand());
+    m_controller.getAButton().toggleWhenPressed(new StartShooterCommand());
   }
 
   public DrivetrainSubsystem getDriveTrainSubsystem()

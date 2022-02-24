@@ -35,12 +35,7 @@ public class IntakeSubsystem extends SubsystemBase{
         m_IntakeMotor.setNeutralMode(NeutralMode.Brake);
     }
     
-    public void setIntakePowerPercent(double power) {
+    public void setIntakePercentPower(double power) {
         m_IntakeMotor.set(ControlMode.PercentOutput, power);
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        this.periodic();//calls periodic during simulation
     }
 }
