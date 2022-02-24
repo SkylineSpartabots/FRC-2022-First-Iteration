@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.lib.util;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -6,12 +6,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
     private XboxController xbox;
-
-    /**
-     * TODO:
-     * Determine DPAD Ports
-     */
-
     private static final byte DPAD_U_PORT = 100;
     private static final byte DPAD_D_PORT = 100;
     private static final byte DPAD_L_PORT = 100;
@@ -30,6 +24,7 @@ public class Controller {
         back = new Button(xbox::getBackButton);
         start = new Button(xbox::getStartButton);
     }
+    
 
     public Trigger getButtonCombo(Button b1, Button b2){
         return new Trigger(){
