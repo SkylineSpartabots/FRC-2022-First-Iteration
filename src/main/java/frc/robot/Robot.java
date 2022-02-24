@@ -5,12 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 import frc.robot.commands.*;
@@ -25,13 +21,10 @@ import frc.robot.subsystems.*;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
 
     addPeriodic(
       () -> {
@@ -59,7 +52,7 @@ public class Robot extends TimedRobot {
     DrivetrainSubsystem.getInstance().resetOdometry();
     m_autonomousCommand = AutonomousCommandFactory.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
+    // schedule the autonomous command
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
@@ -75,7 +68,6 @@ public class Robot extends TimedRobot {
       //cancels auto command
       m_autonomousCommand.cancel();
     }
-
   }
 
   /** This function is called periodically during operator control. */
