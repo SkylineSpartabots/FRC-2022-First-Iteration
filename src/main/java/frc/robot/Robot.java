@@ -27,10 +27,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -45,19 +41,8 @@ public class Robot extends TimedRobot {
       0.000);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
 
@@ -68,12 +53,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
     
     DrivetrainSubsystem.getInstance().resetOdometry(new Pose2d());
-    m_autonomousCommand = DriveCommandFactory.getAutonomousCommand();
+    m_autonomousCommand = AutonomousCommandFactory.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -87,13 +71,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
     if (m_autonomousCommand != null) {
+      //cancels auto command
       m_autonomousCommand.cancel();
     }
+
   }
 
   /** This function is called periodically during operator control. */
@@ -103,31 +85,14 @@ public class Robot extends TimedRobot {
   }
 
   
-
-  private int m_testRounds = 0;
-  private ShuffleboardTab m_testTab;
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-    m_testTab = Shuffleboard.getTab("Test");
-    m_testTab.add("Auto", (CommandBase)DriveCommandFactory.getAutonomousCommand());
-    m_testTab.add("DriveTrain", m_robotContainer.getDriveTrainSubsystem());
-    m_testTab.add("Test", "Inited");
-    m_testRounds = 0;
-
-    
-    /*var voltageTab = Shuffleboard.getTab("VoltageTest");
-    voltageTab.add("SwerveDriveByVoltage", SwerveDriveByVoltage.getInstance());
-    voltageTab.add("Voltage", 0);
-    voltageTab.add("DurationInSec", 1);
-    voltageTab.add("VoltageTestCommand", new VoltageTestCommand());*/
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_testTab.add("TestRounds", m_testRounds++);
   }
 }
