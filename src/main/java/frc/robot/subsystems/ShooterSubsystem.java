@@ -41,4 +41,5 @@ public class ShooterSubsystem extends SubsystemBase {
     public void setShooterPercentPower(double power) {
         mMasterShooter.set(ControlMode.PercentOutput, power);
     }
+
 }

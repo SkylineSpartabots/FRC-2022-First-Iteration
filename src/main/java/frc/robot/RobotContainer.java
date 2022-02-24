@@ -10,9 +10,12 @@ import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
@@ -45,6 +48,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker(
         "Command finished", command.getName(), EventImportance.kNormal));
 
+    //set default commands
     CommandScheduler.getInstance().setDefaultCommand(DrivetrainSubsystem.getInstance(), new TeleopDriveCommand());
 
     // Configure the button bindings
@@ -58,7 +62,49 @@ public class RobotContainer {
 
   // configures button bindings to controller
   private void configureButtonBindings() {
-    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);
+    final double triggerDeadzone = 0.8;
+
+    final double shooterFire = 0.6;
+    final double shooterRamp = 0.5;
+    final double shooterIdle = 0.2;
+    final double shooterOff = 0.0;
+
+    final double indexerOff = 0.0;
+    final double indexerUp = 0.4;
+    final double indexerDown = -0.2;
+    final double indexerFire = 0.6;
+
+    final double intakeOn = 0.8;
+    final double intakeOff = 0.0;
+    final double intakeReverse = -0.5;
+
+    //back button
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);//resets odometry and heading
+
+    //left triggers and bumpers
+    Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
+    leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold
+    leftTriggerAxis.whenInactive(new SetShooterCommand(shooterIdle));//on trigger release
+    m_controller.getLeftBumper().whenPressed(new SetShooterCommand(shooterOff));//left bumper stops shooter
+
+    //right triggers and bumpers
+    Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
+    rightTriggerAxis.whenActive(new ParallelCommandGroup(new SetShooterCommand(shooterFire),new SetIndexerCommand(indexerFire)));//on trigger hold
+    rightTriggerAxis.whenInactive(new ParallelCommandGroup(new SetShooterCommand(shooterIdle),new SetIndexerCommand(indexerOff)));//on trigger release
+    m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
+    m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
+
+    //buttons
+    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
+    m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
+    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));
+    m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
+
+    //DPAD
+    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
+    dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
+    dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
   }
 
 }
