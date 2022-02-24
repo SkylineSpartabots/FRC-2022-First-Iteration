@@ -12,7 +12,7 @@ import frc.robot.commands.StartSubsystemCommand.StartShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
@@ -61,7 +61,6 @@ public class RobotContainer {
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);
     m_controller.getBButton().toggleWhenPressed(new StartIntakeCommand());
     m_controller.getXButton().toggleWhenPressed(new StartIndexerCommand());
-    m_controller.getAButton().toggleWhenPressed(new StartShooterCommand());
   }
 
 }

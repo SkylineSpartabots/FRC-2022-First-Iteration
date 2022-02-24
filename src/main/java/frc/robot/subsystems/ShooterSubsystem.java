@@ -33,8 +33,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private void configureMotor(LazyTalonFX talon, boolean b){
         talon.setInverted(b);
-        PheonixUtil.checkError(talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs),
-            talon.getName() + " failed to set voltage compensation", true);
+        talon.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         talon.enableVoltageCompensation(true);
         talon.setNeutralMode(NeutralMode.Coast);
     }

@@ -40,6 +40,9 @@ public class Controller {
     public boolean getDpadLeft(){ return xbox.getRawButton(DPAD_L_PORT);}
     public boolean getDpadRight(){ return xbox.getRawButton(DPAD_R_PORT);}
 
+    public double getRightTriggerAxis(){ return xbox.getRightTriggerAxis();}
+    public double getLeftTriggerAxis(){ return xbox.getRightTriggerAxis();}
+
     public Button getAButton(){ return a;}
     public Button getBButton(){ return b;}
     public Button getXButton(){ return x;}
