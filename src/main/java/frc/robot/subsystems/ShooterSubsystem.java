@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.TalonFXFactory;
@@ -42,4 +46,17 @@ public class ShooterSubsystem extends SubsystemBase {
         mMasterShooter.set(ControlMode.PercentOutput, power);
     }
 
+    public boolean shooterAtVelocityRPS(double velocity){
+        if(mMasterShooter.getSelectedSensorVelocity()*10 > velocity){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Shooter Velocity (RPS)", mMasterShooter.getSelectedSensorVelocity()*10);
+    }
 }

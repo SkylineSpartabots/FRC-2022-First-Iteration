@@ -10,11 +10,15 @@ import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -64,6 +68,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final double triggerDeadzone = 0.8;
 
+    final double shootVelocityCondition = 10;//CHANGE THIS VALUE
     final double shooterFire = 0.6;
     final double shooterRamp = 0.5;
     final double shooterIdle = 0.2;
@@ -89,7 +94,11 @@ public class RobotContainer {
 
     //right triggers and bumpers
     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
-    rightTriggerAxis.whenActive(new ParallelCommandGroup(new SetShooterCommand(shooterFire),new SetIndexerCommand(indexerFire)));//on trigger hold
+    rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
+      new SequentialCommandGroup( //on trigger hold, waits for
+        new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
+        new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition);}), //waits for correct velocity
+        new SetIndexerCommand(indexerFire))); //fires indexer
     rightTriggerAxis.whenInactive(new ParallelCommandGroup(new SetShooterCommand(shooterIdle),new SetIndexerCommand(indexerOff)));//on trigger release
     m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
     m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
