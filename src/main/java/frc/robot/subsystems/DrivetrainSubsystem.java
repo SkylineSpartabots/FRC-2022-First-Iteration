@@ -201,11 +201,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
     // SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
     // SmartDashboard.putString("Current drive", m_driveConstants.nameForShuffleboardDebug);
-
+    /*
     debugTab.add("X Position", pose.getTranslation().getX());
     debugTab.add("Y Position", pose.getTranslation().getY());
     debugTab.add("Rotation", getGyroscopeRotation().getDegrees());
     debugTab.add("Current Drive", m_driveConstants.nameForShuffleboardDebug);
+    */
   }
 
   @Override
