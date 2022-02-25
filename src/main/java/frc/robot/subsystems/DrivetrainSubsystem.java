@@ -135,6 +135,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.reset();
     m_odometry.resetPosition(new Pose2d(), getGyroscopeRotation());
   }
+  
+  public void resetOdometryFromPosition(Pose2d p_pose) {
+    m_navx.reset();
+    m_odometry.resetPosition(p_pose, getGyroscopeRotation());
+  }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;

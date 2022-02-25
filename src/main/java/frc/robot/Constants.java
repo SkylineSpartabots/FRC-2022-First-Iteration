@@ -12,6 +12,21 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
     // timeout for CAN commands and error checking
     public static final int kTimeOutMs = 10;
+    
+    public static final double shootVelocityCondition = 1000;// CHANGE THIS VALUE
+    public static final double shooterFire = 0.51;
+    public static final double shooterRamp = 0.5;
+    public static final double shooterIdle = 0.2;
+    public static final double shooterOff = 0.0;
+
+    public static final double indexerOff = 0.0;
+    public static final double indexerUp = 0.4;
+    public static final double indexerDown = -0.2;
+    public static final double indexerFire = 0.6;
+
+    public static final double intakeOn = 0.8;
+    public static final double intakeOff = 0.0;
+    public static final double intakeReverse = -0.5;
 
     public static final class DriveConstants {
 

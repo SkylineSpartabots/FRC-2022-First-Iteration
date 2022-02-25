@@ -12,8 +12,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-
-import java.util.function.BooleanSupplier;
+import static frc.robot.Constants.*;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
@@ -72,39 +71,21 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final double triggerDeadzone = 0.8;
 
-    final double shootVelocityCondition = 1000;// CHANGE THIS VALUE
-    final double shooterFire = 0.51;
-    final double shooterRamp = 0.5;
-    final double shooterIdle = 0.2;
-    final double shooterOff = 0.0;
-
-    final double indexerOff = 0.0;
-    final double indexerUp = 0.4;
-    final double indexerDown = -0.2;
-    final double indexerFire = 0.6;
-
-    final double intakeOn = 0.8;
-    final double intakeOff = 0.0;
-    final double intakeReverse = -0.5;
-
     // back button
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
     
      //left triggers and bumpers
-     Trigger leftTriggerAxis = new Trigger(() -> { return
-        m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
+     Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
      leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold
      leftTriggerAxis.whenInactive(new SetShooterCommand(shooterIdle));//on trigger release
      m_controller.getLeftBumper().whenPressed(new SetShooterCommand(shooterOff));//left bumper stops shooter
      
      //right triggers and bumpers
-     Trigger rightTriggerAxis = new Trigger(() -> { return
-     m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
+     Trigger rightTriggerAxis = new Trigger(() -> { return m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
      rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
         new SequentialCommandGroup( //on trigger hold, waits for
           new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
-          new WaitUntilCommand(() -> {return
-            ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition);}), //waits for correct velocity
+          new WaitUntilCommand(() -> {return ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition);}), //waits for correct velocity
           new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
      rightTriggerAxis.whenInactive(new ParallelCommandGroup(
         new SetShooterCommand(shooterIdle),
@@ -121,15 +102,14 @@ public class RobotContainer {
     
     //DPAD
     Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
-    dpadUp.whenActive(new SetIndexerCommand(indexerUp));
-    dpadUp.whenInactive(new SetIndexerCommand(indexerOff));
-    Trigger dpadDown = new Trigger(() -> {return
-    m_controller.getDpadDown();});//hold dpad down for indexer down
+    dpadUp.whenActive(new SetIndexerCommand(indexerUp)).whenInactive(new SetIndexerCommand(indexerOff));
+    Trigger dpadDown = new Trigger(() -> {return m_controller.getDpadDown();});//hold dpad down for indexer down
     dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
     
   }
 
   public void onRobotDisabled() {
+    //called when robot is disabled. Set all subsytems to 0
     IntakeSubsystem.getInstance().setIntakePercentPower(0.0);
     IndexerSubsystem.getInstance().setIndexerPercentPower(0.0);
     ShooterSubsystem.getInstance().setShooterPercentPower(0.0);
