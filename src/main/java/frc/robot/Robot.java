@@ -4,16 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.*;
-import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
-import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
-import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.*;
 
 /**

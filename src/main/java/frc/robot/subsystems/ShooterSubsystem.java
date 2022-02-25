@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -11,7 +10,6 @@ import frc.lib.drivers.TalonFXFactory;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import frc.lib.drivers.PheonixUtil;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {

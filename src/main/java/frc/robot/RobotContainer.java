@@ -115,13 +115,38 @@ public class RobotContainer {
     ShooterSubsystem.getInstance().setShooterPercentPower(0.0);
   }
 
+
+  private double previousXSpeed = 0;
+  private double previousYSpeed = 0;
+  private double previousRotSpeed = 0;
+
   public void driveWithJoystick() {
     // get joystick input for drive
     final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
     final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
     var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
-    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot,
-        m_drivetrainSubsystem.getGyroscopeRotation()));
+
+    final double driveAcceleration = 0.1;//limits max acceleration
+    final double turnAcceleration = 0.1;//limits max rotational acceleration
+
+    double deltaXVelocity = xSpeed - previousXSpeed;
+    double deltaYVelocity = ySpeed - previousYSpeed;
+    double deltaRotVelocity = rot - previousRotSpeed;
+
+    double newXSpeed = xSpeed;
+    double newYSpeed = ySpeed;
+    double newRotSpeed = rot;
+
+    if(Math.abs(deltaXVelocity) > driveAcceleration){ newXSpeed = previousXSpeed + Math.copySign(driveAcceleration, deltaXVelocity);}    
+    if(Math.abs(deltaYVelocity) > driveAcceleration){ newYSpeed = previousYSpeed + Math.copySign(driveAcceleration, deltaYVelocity);}
+    if(Math.abs(deltaRotVelocity) > turnAcceleration){ newRotSpeed = previousRotSpeed + Math.copySign(turnAcceleration, deltaRotVelocity);}
+
+    previousXSpeed = newXSpeed;
+    previousYSpeed = newYSpeed;
+    previousRotSpeed = newRotSpeed;
+
+    //newSpeed gives motion profiled values that limits accel/deccel. replace with xSpeed and ySpeed and rot to get rid of cap.
+    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(newXSpeed, newYSpeed, newRotSpeed, m_drivetrainSubsystem.getGyroscopeRotation()));
   }
 
   public static double applyDeadband(double value, double deadband) {
