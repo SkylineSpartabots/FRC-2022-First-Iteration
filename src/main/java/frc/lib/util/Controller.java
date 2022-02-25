@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
     private XboxController xbox;
-    private static final byte DPAD_U_PORT = 100;
-    private static final byte DPAD_D_PORT = 100;
-    private static final byte DPAD_L_PORT = 100;
-    private static final byte DPAD_R_PORT = 100;
+    private static final byte DPAD_U_PORT = -1;
+    private static final byte DPAD_D_PORT = -3;
+    private static final byte DPAD_L_PORT = -4;
+    private static final byte DPAD_R_PORT = -2;
     private Button a, b, x, y, rb, lb, lstick, rstick, back, start;
     public Controller(XboxController xbox){
         this.xbox = xbox;
@@ -41,7 +41,7 @@ public class Controller {
     public boolean getDpadRight(){ return xbox.getRawButton(DPAD_R_PORT);}
 
     public double getRightTriggerAxis(){ return xbox.getRightTriggerAxis();}
-    public double getLeftTriggerAxis(){ return xbox.getRightTriggerAxis();}
+    public double getLeftTriggerAxis(){ return xbox.getLeftTriggerAxis();}
 
     public Button getAButton(){ return a;}
     public Button getBButton(){ return b;}

@@ -7,8 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.*;
+import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
+import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.*;
 
 /**
@@ -22,12 +26,14 @@ import frc.robot.subsystems.*;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private RobotContainer m_robotContainer;
 
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
 
     addPeriodic(
         () -> {
@@ -45,6 +51,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.onRobotDisabled();
   }
 
   @Override
@@ -79,7 +86,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+      m_robotContainer.driveWithJoystick();
   }
 
   @Override

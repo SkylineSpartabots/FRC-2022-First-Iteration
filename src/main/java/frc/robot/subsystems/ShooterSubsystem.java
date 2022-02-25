@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public boolean shooterAtVelocityRPS(double velocity){
-        if(mMasterShooter.getSelectedSensorVelocity()*10 > velocity){
+        if(mMasterShooter.getSelectedSensorVelocity()/10 > velocity){
             return true;
         }
         else{
@@ -57,6 +57,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("Shooter Velocity (RPS)", mMasterShooter.getSelectedSensorVelocity()*10);
+        SmartDashboard.putNumber("Shooter Velocity (RPS)", mMasterShooter.getSelectedSensorVelocity()/10);
     }
 }

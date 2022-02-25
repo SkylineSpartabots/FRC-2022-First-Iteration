@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -82,7 +81,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public DrivetrainSubsystem() {
-    setDefaultCommand(new TeleopDriveCommand(this));
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
@@ -134,7 +132,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void resetOdometry() {
-    SmartDashboard.putNumber("Pressed Reset", 1);
     m_navx.reset();
     m_odometry.resetPosition(new Pose2d(), getGyroscopeRotation());
   }
