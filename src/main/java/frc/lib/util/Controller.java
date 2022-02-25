@@ -2,6 +2,7 @@ package frc.lib.util;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
@@ -11,6 +12,7 @@ public class Controller {
     private static final byte DPAD_L_PORT = -4;
     private static final byte DPAD_R_PORT = -2;
     private Button a, b, x, y, rb, lb, lstick, rstick, back, start;
+    private POVButton up, down, left, right;
     public Controller(XboxController xbox){
         this.xbox = xbox;
         a = new Button(xbox::getAButton);
@@ -35,10 +37,10 @@ public class Controller {
         };
     }
     
-    public boolean getDpadUp(){ return xbox.getRawButton(DPAD_U_PORT);}
-    public boolean getDpadDown(){ return xbox.getRawButton(DPAD_D_PORT);}
-    public boolean getDpadLeft(){ return xbox.getRawButton(DPAD_L_PORT);}
-    public boolean getDpadRight(){ return xbox.getRawButton(DPAD_R_PORT);}
+    public boolean getDpadUp(){ return xbox.getPOV() == 0; }
+    public boolean getDpadRigbt(){ return xbox.getPOV() == 90;}
+    public boolean getDpadDown(){ return xbox.getPOV() == 180;}
+    public boolean getDpadLeft(){ return xbox.getPOV() == 270;}
 
     public double getRightTriggerAxis(){ return xbox.getRightTriggerAxis();}
     public double getLeftTriggerAxis(){ return xbox.getLeftTriggerAxis();}

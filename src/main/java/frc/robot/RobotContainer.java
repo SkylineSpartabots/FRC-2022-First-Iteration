@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -63,7 +62,11 @@ public class RobotContainer {
     AutonomousCommandFactory.swapAutonomousCommands();
   }
 
-  public final Controller m_controller = new Controller(new XboxController(0));
+  private static final Controller m_controller = new Controller(new XboxController(0));
+
+  public static Controller getController(){
+    return m_controller;
+  }
 
   // configures button bindings to controller
   private void configureButtonBindings() {
