@@ -9,8 +9,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class TeleopDriveCommand extends CommandBase {
     private DrivetrainSubsystem m_drivetrainSubsystem;
 
-    public TeleopDriveCommand() {
-        m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
+    public TeleopDriveCommand(DrivetrainSubsystem m_drivetrainSubsystem) {
+        this.m_drivetrainSubsystem = m_drivetrainSubsystem;
         addRequirements(m_drivetrainSubsystem);
     }
 
@@ -26,7 +26,6 @@ public class TeleopDriveCommand extends CommandBase {
         final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
         final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
         var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
-
         m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot,
                 m_drivetrainSubsystem.getGyroscopeRotation()));
     }
@@ -53,9 +52,4 @@ public class TeleopDriveCommand extends CommandBase {
         return value;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        m_drivetrainSubsystem
-                .drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
-    }
 }
