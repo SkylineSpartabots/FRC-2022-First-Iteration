@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.*;
 
+import javax.sound.sampled.SourceDataLine;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
@@ -17,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -104,6 +107,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Mk4SwerveModuleHelper.GearRatio.L2, 6, 5, 11, -Math.toRadians(234.228515625));
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
+    
   }
 
   /**
@@ -127,9 +131,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return m_odometry.getPoseMeters();
   }
 
-  public void resetOdometry(Pose2d p_pose) {
+  public void resetOdometry() {
     m_navx.reset();
-    m_odometry.resetPosition(p_pose, getGyroscopeRotation());
+    m_odometry.resetPosition(new Pose2d(), getGyroscopeRotation());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -138,7 +142,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 
   @Override
-  public void periodic() {
+  public void periodic() {    
     var pose = m_odometry.getPoseMeters();
 
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());

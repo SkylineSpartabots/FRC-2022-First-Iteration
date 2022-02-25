@@ -4,109 +4,146 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.AutonomousCommandFactory;
-import frc.robot.commands.StartIndexerCommand;
-import frc.robot.commands.StartIntakeCommand;
-import frc.robot.commands.StartShooterCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
+import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
+import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
-  private final Controller m_controller = new Controller(new XboxController(0));
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
     m_drivetrainSubsystem.zeroGyroscope();
 
-    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+    // Set the scheduler to log Shuffleboard events for command initialize,
+    // interrupt, finish
     CommandScheduler.getInstance().onCommandInitialize(command -> Shuffleboard.addEventMarker(
         "Command initialized", command.getName(), EventImportance.kNormal));
     CommandScheduler.getInstance().onCommandInterrupt(command -> Shuffleboard.addEventMarker(
         "Command interrupted", command.getName(), EventImportance.kNormal));
-    CommandScheduler.getInstance().onCommandFinish(command ->Shuffleboard.addEventMarker(
+    CommandScheduler.getInstance().onCommandFinish(command -> Shuffleboard.addEventMarker(
         "Command finished", command.getName(), EventImportance.kNormal));
 
     // Configure the button bindings
     configureButtonBindings();
 
-    //initialize Shuffleboard swapping of autonomous commands
+    // initialize Shuffleboard swapping of autonomous commands
     AutonomousCommandFactory.swapAutonomousCommands();
   }
 
-  //configures button bindings to controller
-  private void configureButtonBindings() {
-    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-    m_controller.getBButton().toggleWhenPressed(new StartIntakeCommand());
-    m_controller.getXButton().toggleWhenPressed(new StartIndexerCommand());
-    m_controller.getAButton().toggleWhenPressed(new StartShooterCommand());
+  private static final Controller m_controller = new Controller(new XboxController(0));
+
+  public static Controller getController(){
+    return m_controller;
   }
 
-  public DrivetrainSubsystem getDriveTrainSubsystem()
-  {
-    return m_drivetrainSubsystem;
+  // configures button bindings to controller
+  private void configureButtonBindings() {
+    final double triggerDeadzone = 0.8;
+
+    final double shootVelocityCondition = 1000;// CHANGE THIS VALUE
+    final double shooterFire = 0.51;
+    final double shooterRamp = 0.5;
+    final double shooterIdle = 0.2;
+    final double shooterOff = 0.0;
+
+    final double indexerOff = 0.0;
+    final double indexerUp = 0.4;
+    final double indexerDown = -0.2;
+    final double indexerFire = 0.6;
+
+    final double intakeOn = 0.8;
+    final double intakeOff = 0.0;
+    final double intakeReverse = -0.5;
+
+    // back button
+    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
+    
+     //left triggers and bumpers
+     Trigger leftTriggerAxis = new Trigger(() -> { return
+        m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
+     leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold
+     leftTriggerAxis.whenInactive(new SetShooterCommand(shooterIdle));//on trigger release
+     m_controller.getLeftBumper().whenPressed(new SetShooterCommand(shooterOff));//left bumper stops shooter
+     
+     //right triggers and bumpers
+     Trigger rightTriggerAxis = new Trigger(() -> { return
+     m_controller.getRightTriggerAxis() > triggerDeadzone;});//right trigger deadzone 0.8
+     rightTriggerAxis.whenActive(//TO DO: FIGURE OUT CANCELLING COMMAND
+        new SequentialCommandGroup( //on trigger hold, waits for
+          new SetShooterCommand(shooterFire), //ramps up shooter to shooting speeds
+          new WaitUntilCommand(() -> {return
+            ShooterSubsystem.getInstance().shooterAtVelocityRPS(shootVelocityCondition);}), //waits for correct velocity
+          new SetIndexerCommand(indexerFire), new SetIntakeCommand(intakeOn))); //fires indexer
+     rightTriggerAxis.whenInactive(new ParallelCommandGroup(
+        new SetShooterCommand(shooterIdle),
+        new SetIndexerCommand(indexerOff),
+        new SetIntakeCommand(intakeOff)));//on trigger release
+     m_controller.getRightBumper().whenActive(new SetIndexerCommand(indexerUp));//right bumper hold
+     m_controller.getRightBumper().whenInactive(new SetIndexerCommand(indexerOff));//right bumper release
+     
+    // buttons
+    m_controller.getAButton().whenPressed(new SetIntakeCommand(intakeOn));
+    m_controller.getYButton().whenPressed(new SetIntakeCommand(intakeReverse));
+    m_controller.getYButton().whenReleased(new SetIntakeCommand(intakeOn));
+    m_controller.getBButton().whenPressed(new SetIntakeCommand(intakeOff));
+    
+    //DPAD
+    Trigger dpadUp = new Trigger(() -> {return m_controller.getDpadUp();});//hold dpad up for indexer up
+    dpadUp.whenActive(new SetIndexerCommand(indexerUp));
+    dpadUp.whenInactive(new SetIndexerCommand(indexerOff));
+    Trigger dpadDown = new Trigger(() -> {return
+    m_controller.getDpadDown();});//hold dpad down for indexer down
+    dpadDown.whenActive(new SetIndexerCommand(indexerDown)).whenInactive(new SetIndexerCommand(indexerOff));
+    
+  }
+
+  public void onRobotDisabled() {
+    IntakeSubsystem.getInstance().setIntakePercentPower(0.0);
+    IndexerSubsystem.getInstance().setIndexerPercentPower(0.0);
+    ShooterSubsystem.getInstance().setShooterPercentPower(0.0);
   }
 
   public void driveWithJoystick() {
-    //get joystick input for drive
+    // get joystick input for drive
     final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
     final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
     var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
-
-    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_drivetrainSubsystem.getGyroscopeRotation()));
-  }
-  
-  public void resetOdometryFromReference(double threshold){
-    Translation2d current = m_drivetrainSubsystem.getPose().getTranslation();
-    double minError = FieldConstants.kMinReferenceError;
-    Translation2d newPos = null;
-    for(Translation2d ref : FieldConstants.kReferenceTranslations){
-      double errorX = Math.abs(ref.getX() - current.getX());
-      double errorY = Math.abs(ref.getY() - current.getY());
-      double error = Math.min(minError, Math.sqrt(Math.pow(errorX, 2) + Math.pow(errorY, 2)));
-      if(error < minError){
-        newPos = ref;
-        minError = error;
-      }
-    }
-    if(minError < FieldConstants.kMinReferenceError){
-      m_drivetrainSubsystem.resetOdometry(new Pose2d(newPos, m_drivetrainSubsystem.getGyroscopeRotation()));
-      SmartDashboard.putBoolean("Too Far From Reference", false);
-    }
-    else
-      SmartDashboard.putBoolean("Too Far From Reference", true);
+    m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot,
+        m_drivetrainSubsystem.getGyroscopeRotation()));
   }
 
-  public void softResetOdometryFromReference(){
-    resetOdometryFromReference(FieldConstants.kMinReferenceError);
-  }
-  public void hardResetOdometryFromReference(){
-    resetOdometryFromReference(100d);
-  }
-
-  public void resetOdometryFromPosition(){
-     m_drivetrainSubsystem.resetOdometry(new Pose2d());
-  } 
-  
   public static double applyDeadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
       if (value > 0.0) {
@@ -128,4 +165,5 @@ public class RobotContainer {
 
     return value;
   }
+
 }

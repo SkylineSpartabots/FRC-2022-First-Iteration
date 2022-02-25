@@ -25,8 +25,7 @@ public class IndexerSubsystem extends SubsystemBase{
     public IndexerSubsystem() {
         m_IndexerMotor = TalonFXFactory.createDefaultFalcon("Shooter Motor", 32);//creates motor
         //configure motor
-        PheonixUtil.checkError(m_IndexerMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs),
-            m_IndexerMotor.getName() + " failed to set voltage compensation", true);
+        m_IndexerMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         m_IndexerMotor.enableVoltageCompensation(true);        
         m_IndexerMotor.setNeutralMode(NeutralMode.Brake);
     }
