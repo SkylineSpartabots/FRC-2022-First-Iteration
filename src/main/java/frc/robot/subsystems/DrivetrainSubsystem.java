@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -79,6 +80,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public DrivetrainSubsystem() {
+    setDefaultCommand(new TeleopDriveCommand(this));
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
@@ -116,26 +118,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.zeroYaw();
   }
 
+  private double rotationOffset = 0.0;
   public Rotation2d getGyroscopeRotation() {
    if (m_navx.isMagnetometerCalibrated()) {
      // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + rotationOffset);
    }
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   return Rotation2d.fromDegrees((360.0 - m_navx.getYaw()) + rotationOffset);
   }
   
   public Pose2d getPose(){
         return m_odometry.getPoseMeters();
   }
 
+  //resets to 0,0
   public void resetOdometry() {
     m_navx.reset();
     m_odometry.resetPosition(new Pose2d(), getGyroscopeRotation());
   }
   
+  //resets from offset
   public void resetOdometryFromPosition(Pose2d p_pose) {
     m_navx.reset();
+    rotationOffset = p_pose.getRotation().getDegrees();
     m_odometry.resetPosition(p_pose, getGyroscopeRotation());
   }
 

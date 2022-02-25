@@ -34,7 +34,7 @@ public class AutonomousCommandFactory {
 
         final double startX = 7.70;
         final double startY = 2.80;
-        final double startRot = -110.9;
+        final double startRot = -110;
         final double pos1X = 5.54;
         final double pos1Y = 1.98;
         final double pos1Rot = -135;
@@ -46,10 +46,10 @@ public class AutonomousCommandFactory {
         final double pos3Rot = -90;
 
         //SET STARTING POSITION
-        m_drivetrainSubsystem.resetOdometryFromPosition(new Pose2d(startX , startY, new Rotation2d(Math.toRadians(70.40))));
+        m_drivetrainSubsystem.resetOdometryFromPosition(new Pose2d(startX , startY, new Rotation2d(startRot)));
 
         //startX, startY, startRot, endX, endY, endRot
-        Command turnIntakeOn = new SetIntakeCommand(intakeOn);
+        Command turnOnIntake = new SetIntakeCommand(intakeOn);
         Command rampUpShooter = new SetShooterCommand(shooterRamp);
         Command driveToFirstBall = new TrajectoryDriveCommand(startX, startY, startRot, pos1X, pos1Y, pos1Rot);
         Command driveBackToShoot = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot, startX, startY, startRot);
@@ -66,7 +66,7 @@ public class AutonomousCommandFactory {
         Command turnIntakeOff = new SetIndexerCommand(intakeOff);
 
         return new SequentialCommandGroup(
-            turnIntakeOn,
+            turnOnIntake,
             rampUpShooter,
             driveToFirstBall,
             driveBackToShoot,
