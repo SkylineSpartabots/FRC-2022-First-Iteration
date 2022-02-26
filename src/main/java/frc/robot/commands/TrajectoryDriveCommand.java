@@ -38,30 +38,25 @@ public class TrajectoryDriveCommand extends CommandBase {
   private final double maxAcceleration = 1;
 
 
-  public TrajectoryDriveCommand(double startX, double startY, double startRotation, double endX, double endY, double endRotation){
-      m_subsystem = DrivetrainSubsystem.getInstance();
-      addRequirements(m_subsystem); //add requirements
+  public TrajectoryDriveCommand(double endX, double endY, double endRotation){
+      this();
 
       TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics);
-      //  .setStartVelocity(0).setEndVelocity(0);
-      m_trajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(startX,startY, new Rotation2d(Math.toRadians(startRotation))), List.of(),
+      m_trajectory = TrajectoryGenerator.generateTrajectory(m_subsystem.getPose(), List.of(),
         new Pose2d(endX, endY, new Rotation2d(Math.toRadians(endRotation))), config);
+      m_endRotation = new Rotation2d(Math.toRadians(endRotation));
   }
 
   public TrajectoryDriveCommand(Trajectory p_trajectory) {
-    m_subsystem = DrivetrainSubsystem.getInstance();
-    addRequirements(m_subsystem); //add requirements
-
-    m_trajectory = p_trajectory;
+      this();
+      m_trajectory = p_trajectory;
+      Pose2d endPose = m_trajectory.getStates().get(m_trajectory.getStates().size() - 1).poseMeters;
+      m_endRotation = endPose.getRotation();
   }
 
-
-  private final Timer m_timer = new Timer();
-
-  @Override
-  public void initialize() {
-    SmartDashboard.putNumber("Projected Time", m_trajectory.getTotalTimeSeconds());
+  private TrajectoryDriveCommand(){
+    m_subsystem = DrivetrainSubsystem.getInstance();
+    addRequirements(m_subsystem); //add requirements
 
     PIDController xController = new PIDController(1, 0, 0);
     PIDController yController = new PIDController(1, 0, 0);
@@ -70,18 +65,21 @@ public class TrajectoryDriveCommand extends CommandBase {
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
     m_controller.setEnabled(true);
+  }
 
-    Pose2d endPose = m_trajectory.getStates().get(m_trajectory.getStates().size() - 1).poseMeters;
-    m_endRotation = endPose.getRotation();
+
+  private final Timer m_timer = new Timer();
+
+  @Override
+  public void initialize() {
+    SmartDashboard.putNumber("Projected Time", m_trajectory.getTotalTimeSeconds());
     m_timer.reset();
     m_timer.start();
   }
 
   @Override
   public void execute() {
-    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
-      new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), 
-      m_subsystem.getGyroscopeRotation()), m_trajectory.sample(m_timer.get()), m_endRotation);
+    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(m_subsystem.getPose(), m_trajectory.sample(m_timer.get()), m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
 
     SmartDashboard.putNumber("Elapsed Time", m_timer.get());

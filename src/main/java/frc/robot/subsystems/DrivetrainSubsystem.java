@@ -121,14 +121,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.zeroYaw();
   }
 
-  private double rotationOffset = -360;
+  private double rotationOffset = 0;
   public Rotation2d getGyroscopeRotation() {
    if (m_navx.isMagnetometerCalibrated()) {
      // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + rotationOffset);
    }
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees((-m_navx.getYaw()));
+   return Rotation2d.fromDegrees((-m_navx.getYaw())+rotationOffset);
   }
   
   public Pose2d getPose(){
@@ -150,7 +150,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //resets from offset
   public void resetOdometryFromPosition(double x, double y, double rot) {
     m_navx.reset();
-    rotationOffset = rot-360;
+    rotationOffset = rot;
     m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rotationOffset));
   }
 

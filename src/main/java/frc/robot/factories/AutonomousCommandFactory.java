@@ -52,8 +52,7 @@ public class AutonomousCommandFactory {
         //startX, startY, startRot, endX, endY, endRot
        // Command turnOnIntake = new SetIntakeCommand(intakeOn);
        // Command rampUpShooter = new SetShooterCommand(shooterRamp);
-        Command driveToFirstBall = new TrajectoryDriveCommand(
-            m_drivetrainSubsystem.getPose().getX(), m_drivetrainSubsystem.getPose().getY(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), pos1X, pos1Y, pos1Rot);
+        Command driveToFirstBall = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot);
        /* Command driveBackToShoot = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot, startX, startY, startRot);
         Command fireIndexer = new SetIndexerCommand(indexerFire);
         Command waitForShooterToFinish = new WaitCommand(2);
