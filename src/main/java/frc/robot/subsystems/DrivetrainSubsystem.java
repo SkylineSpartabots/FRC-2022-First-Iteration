@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -60,6 +61,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
           Math.hypot(DriveConstants.kTrackWidth / 2.0, DriveConstants.kWheelBase / 2.0);
 
   private final SwerveDriveOdometry m_odometry;
+  private final SimpleMotorFeedforward m_feedforward;
 
   private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
@@ -107,6 +109,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Mk4SwerveModuleHelper.GearRatio.L2, 6, 5, 11, -Math.toRadians(234.228515625));
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
+    m_feedforward = new SimpleMotorFeedforward(0.50673, 0.34619, 0.018907);
     
   }
 
@@ -118,14 +121,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.zeroYaw();
   }
 
-  private double rotationOffset = 0.0;
+  private double rotationOffset = -360;
   public Rotation2d getGyroscopeRotation() {
    if (m_navx.isMagnetometerCalibrated()) {
      // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading() + rotationOffset);
+     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
    }
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees((360.0 - m_navx.getYaw()) + rotationOffset);
+   return Rotation2d.fromDegrees((-m_navx.getYaw()));
   }
   
   public Pose2d getPose(){
@@ -134,15 +137,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //resets to 0,0
   public void resetOdometry() {
+    final double startX = 7.70;
+    final double startY = 2.80;
+    final double startRot = -110;
+    resetOdometryFromPosition(startX, startY, startRot);
+    /*
     m_navx.reset();
-    m_odometry.resetPosition(new Pose2d(), getGyroscopeRotation());
+    rotationOffset = -360;
+    m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));*/
   }
   
   //resets from offset
-  public void resetOdometryFromPosition(Pose2d p_pose) {
+  public void resetOdometryFromPosition(double x, double y, double rot) {
     m_navx.reset();
-    rotationOffset = p_pose.getRotation().getDegrees();
-    m_odometry.resetPosition(p_pose, getGyroscopeRotation());
+    rotationOffset = rot-360;
+    m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rotationOffset));
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -163,10 +172,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MaxSpeedMetersPerSecond);
 
-    m_frontLeftModule.set(states[0].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[0].angle.getRadians());
-    m_frontRightModule.set(states[1].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[1].angle.getRadians());
-    m_backLeftModule.set(states[2].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[2].angle.getRadians());
-    m_backRightModule.set(states[3].speedMetersPerSecond / MaxSpeedMetersPerSecond * MAX_VOLTAGE, states[3].angle.getRadians());
+    m_frontLeftModule.set(getVoltageByVelocity(states[0].speedMetersPerSecond), states[0].angle.getRadians());
+    m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
+    m_backLeftModule.set(getVoltageByVelocity(states[2].speedMetersPerSecond), states[2].angle.getRadians());
+    m_backRightModule.set(getVoltageByVelocity(states[3].speedMetersPerSecond), states[3].angle.getRadians());
 
     m_odometry.update(getGyroscopeRotation(), 
         new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
@@ -174,36 +183,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
         new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
   }
-
-  public void driveByVoltage(double p_voltage){
-     m_frontLeftModule.set(p_voltage, 0);
-     m_frontRightModule.set(p_voltage, 0);
-     m_backLeftModule.set(p_voltage, 0);
-     m_backRightModule.set(p_voltage, 0);
-
-     m_odometry.update(getGyroscopeRotation(), 
-        new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
-        new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
-        new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
-        new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle())));
+  
+  public double getVoltageByVelocity(double targetVelocity){
+    return m_feedforward.calculate(targetVelocity * 6);
   }
-
-  /*
-    Baseline drivetrain logic is assuming target velocity is linear to voltage following 
-      Voltage = k * velocity
-
-    In theory, the equation should more like to be
-      Voltage = kS * sign(velocity) + kV * velocity + kA * acceleration
-    
-    For normal case where sign(velocity) == 1, and acceleration == 0, it should be
-      Voltage = kS + kV * velocity
-
-    to find out what is the value of kS, we can run test by using constant voltage record the X position, to capture the stable 
-    velocity it reached. Running the test using several different voltage like 3V, 6V, 9V and 12V, we should be able to calculate 
-    value of kS and kV. 
-
-    In game, we most likely to run the robot either stop or a high speed, we may run more voltage near the high side like 9V, 10V, 11V and 12V.
-
-    Extra: although battery have target voltage of 12V, we may use something lower like 11.5V to get a consistent output even when battery is not full.
-  */
 }

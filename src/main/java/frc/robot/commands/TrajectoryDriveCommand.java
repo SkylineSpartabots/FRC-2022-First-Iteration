@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class TrajectoryDriveCommand extends CommandBase {
@@ -33,7 +34,7 @@ public class TrajectoryDriveCommand extends CommandBase {
   private HolonomicDriveController m_controller;
 
   //SET MAX SPEED AND MAX ACCELERATION
-  private final double maxSpeed = 1;
+  private final double maxSpeed = 0.5;
   private final double maxAcceleration = 1;
 
 
@@ -41,8 +42,8 @@ public class TrajectoryDriveCommand extends CommandBase {
       m_subsystem = DrivetrainSubsystem.getInstance();
       addRequirements(m_subsystem); //add requirements
 
-      TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics)
-        .setStartVelocity(0).setEndVelocity(0);
+      TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics);
+      //  .setStartVelocity(0).setEndVelocity(0);
       m_trajectory = TrajectoryGenerator.generateTrajectory(
         new Pose2d(startX,startY, new Rotation2d(Math.toRadians(startRotation))), List.of(),
         new Pose2d(endX, endY, new Rotation2d(Math.toRadians(endRotation))), config);
@@ -60,6 +61,8 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("Projected Time", m_trajectory.getTotalTimeSeconds());
+
     PIDController xController = new PIDController(1, 0, 0);
     PIDController yController = new PIDController(1, 0, 0);
     ProfiledPIDController thetaController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
@@ -76,8 +79,12 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(m_subsystem.getPose(), m_trajectory.sample(m_timer.get()), m_endRotation);
+    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
+      new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), 
+      m_subsystem.getGyroscopeRotation()), m_trajectory.sample(m_timer.get()), m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
+
+    SmartDashboard.putNumber("Elapsed Time", m_timer.get());
   }
 
   // Called once the command ends or is interrupted.

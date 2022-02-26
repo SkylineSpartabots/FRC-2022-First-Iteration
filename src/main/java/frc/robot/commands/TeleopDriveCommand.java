@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.util.Controller;
 import frc.robot.RobotContainer;
@@ -24,16 +26,20 @@ public class TeleopDriveCommand extends CommandBase {
     private final Controller m_controller;
 
     //limit accel/deccel
-    SlewRateLimiter driveFilter = new SlewRateLimiter(0.5);
-    SlewRateLimiter rotFilter = new SlewRateLimiter(0.5);
+    SlewRateLimiter driveXFilter = new SlewRateLimiter(7);
+    SlewRateLimiter driveYFilter = new SlewRateLimiter(7);
+    SlewRateLimiter rotFilter = new SlewRateLimiter(20);
 
     public void driveWithJoystick() {
         // get joystick input for drive
-        final var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
-        final var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
+        var xSpeed = -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
+        var ySpeed = -modifyAxis(m_controller.getLeftX()) * DrivetrainSubsystem.MaxSpeedMetersPerSecond;
         var rot = -modifyAxis(m_controller.getRightX()) * DrivetrainSubsystem.MaxAngularSpeedRadiansPerSecond;
 
-        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveFilter.calculate(xSpeed), driveFilter.calculate(ySpeed), 
+        SmartDashboard.putNumber("xSpeed", xSpeed);
+        SmartDashboard.putNumber("ySpeed", ySpeed);
+        SmartDashboard.putNumber("rotSpeed", rot);
+        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(driveXFilter.calculate(xSpeed), driveYFilter.calculate(ySpeed), 
                 rotFilter.calculate(rot), m_drivetrainSubsystem.getGyroscopeRotation()));
     }
 
@@ -51,7 +57,7 @@ public class TeleopDriveCommand extends CommandBase {
 
     private static double modifyAxis(double value) {
         // Deadband
-        value = applyDeadband(value, 0.1);
+        value = applyDeadband(value, 0.3);
 
         // Square the axis
         value = Math.copySign(value * value, value);

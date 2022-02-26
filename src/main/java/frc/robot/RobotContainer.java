@@ -4,10 +4,10 @@
 package frc.robot;
 
 import frc.lib.util.Controller;
-import frc.robot.commands.AutonomousCommandFactory;
 import frc.robot.commands.SetSubsystemCommand.SetIndexerCommand;
 import frc.robot.commands.SetSubsystemCommand.SetIntakeCommand;
 import frc.robot.commands.SetSubsystemCommand.SetShooterCommand;
+import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -43,7 +43,6 @@ public class RobotContainer {
    */
   public RobotContainer() {
     m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
-    m_drivetrainSubsystem.zeroGyroscope();
 
     // Set the scheduler to log Shuffleboard events for command initialize,
     // interrupt, finish

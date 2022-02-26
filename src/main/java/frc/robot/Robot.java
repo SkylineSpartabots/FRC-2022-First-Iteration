@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.*;
+import frc.robot.factories.AutonomousCommandFactory;
 import frc.robot.subsystems.*;
 
 /**
@@ -54,8 +57,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
-    DrivetrainSubsystem.getInstance().resetOdometry();
     m_autonomousCommand = AutonomousCommandFactory.getAutonomousCommand();
 
     // schedule the autonomous command
@@ -71,6 +72,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //DrivetrainSubsystem.getInstance().resetOdometry();
     if (m_autonomousCommand != null) {
       // cancels auto command
       m_autonomousCommand.cancel();
@@ -85,6 +87,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
