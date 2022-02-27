@@ -133,6 +133,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();
+    
     rotationOffset = pose.getRotation().getDegrees();
     Rotation2d newRot = new Rotation2d(rotationOffset);
     m_odometry.resetPosition(new Pose2d(pose.getX(), pose.getY(), newRot), newRot);
