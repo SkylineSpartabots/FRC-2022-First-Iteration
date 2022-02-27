@@ -66,6 +66,7 @@ dependencies {
     nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
+    implementation "com.github.Oblarg:Oblog:4.0.9"
 
     testImplementation 'junit:junit:4.12'
 }
@@ -87,3 +88,7 @@ jar {
 deployArtifact.jarTask = jar
 wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
+
+repositories {
+  maven { url 'https://jitpack.io' }
+}

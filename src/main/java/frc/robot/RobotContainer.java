@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -37,6 +38,10 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
+  private static final Field2d m_field = new Field2d();
+  public static Field2d getField(){
+    return m_field;
+  }
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
