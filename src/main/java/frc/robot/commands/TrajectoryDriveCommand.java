@@ -54,6 +54,15 @@ public class TrajectoryDriveCommand extends CommandBase {
       this.interiorPoints = interiorPoints;
       this.reverse = reverse;
   }
+
+  public TrajectoryDriveCommand(Pose2d endPose, List<Translation2d> interiorPoints, boolean reverse){
+    this();
+    this.endX = endPose.getX();
+    this.endY = endPose.getY();
+    this.endRotation = endPose.getRotation().getDegrees();
+    this.interiorPoints = interiorPoints;
+    this.reverse = reverse;
+}
 /*
   public TrajectoryDriveCommand(Trajectory p_trajectory) {
       this();
@@ -72,15 +81,15 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   //SHUFFLEBOARD
   ShuffleboardTab t = Shuffleboard.getTab("Trajectory");
-  NetworkTableEntry timeEntry = t.add("Elapsed Time", 0).getEntry();
-  NetworkTableEntry accelEntry = t.add("Desired acceleration", 0).getEntry();
-  NetworkTableEntry velEntry = t.add("Desired velocity", 0).getEntry();
-  NetworkTableEntry curvEntry = t.add("Desired Curvature", 0).getEntry();
-  NetworkTableEntry desTimeEntry = t.add("Desired Time", 0).getEntry();
-  NetworkTableEntry endRotEntry = t.add("End Rotation",0).getEntry();
-  NetworkTableEntry poseEntry = t.add("Desired Pose", 0).getEntry();
-  NetworkTableEntry autoSpeedEntry = t.add("Auto Speed", 0).getEntry();
-  NetworkTableEntry odoEntry = t.add("Odo ", 0).getEntry();
+  // NetworkTableEntry timeEntry = t.add("Elapsed Time", 0).getEntry();
+  // NetworkTableEntry accelEntry = t.add("Desired acceleration", 0).getEntry();
+  // NetworkTableEntry velEntry = t.add("Desired velocity", 0).getEntry();
+  // NetworkTableEntry curvEntry = t.add("Desired Curvature", 0).getEntry();
+  // NetworkTableEntry desTimeEntry = t.add("Desired Time", 0).getEntry();
+  // NetworkTableEntry endRotEntry = t.add("End Rotation",0).getEntry();
+  // NetworkTableEntry poseEntry = t.add("Desired Pose", 0).getEntry();
+  // NetworkTableEntry autoSpeedEntry = t.add("Auto Speed", 0).getEntry();
+  // NetworkTableEntry odoEntry = t.add("Odo ", 0).getEntry();
   
 
   @Override
@@ -116,21 +125,21 @@ public class TrajectoryDriveCommand extends CommandBase {
     m_subsystem.drive(targetChassisSpeeds);
 
     //SHUFFLEBOARD
-    timeEntry.setDouble(m_timer.get());
-    accelEntry.setDouble(desiredSpeed.accelerationMetersPerSecondSq);
-    velEntry.setDouble(desiredSpeed.velocityMetersPerSecond);
-    curvEntry.setDouble(desiredSpeed.curvatureRadPerMeter);
-    desTimeEntry.setDouble(desiredSpeed.timeSeconds);
-    endRotEntry.setDouble(m_endRotation.getDegrees());
-    poseEntry.setString(Math.round(desiredSpeed.poseMeters.getX()*100.0)/10.0 + ", " + 
-      Math.round(desiredSpeed.poseMeters.getY()*100.0)/10.0 + ", " + 
-      Math.round(desiredSpeed.poseMeters.getRotation().getDegrees()*100.0)/10.0);
-    autoSpeedEntry.setString(Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
-      Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
-      Math.round(targetChassisSpeeds.omegaRadiansPerSecond*100.0)/10.0);
-    odoEntry.setString(Math.round(m_subsystem.getPose().getX()*100.0)/10.0 + ", " + 
-      Math.round(m_subsystem.getPose().getY()*100.0)/10.0 + ", " + 
-      Math.round(m_subsystem.getPose().getRotation().getDegrees()*100.0)/10.0);
+    // timeEntry.setDouble(m_timer.get());
+    // accelEntry.setDouble(desiredSpeed.accelerationMetersPerSecondSq);
+    // velEntry.setDouble(desiredSpeed.velocityMetersPerSecond);
+    // curvEntry.setDouble(desiredSpeed.curvatureRadPerMeter);
+    // desTimeEntry.setDouble(desiredSpeed.timeSeconds);
+    // endRotEntry.setDouble(m_endRotation.getDegrees());
+    // poseEntry.setString(Math.round(desiredSpeed.poseMeters.getX()*100.0)/10.0 + ", " + 
+    //   Math.round(desiredSpeed.poseMeters.getY()*100.0)/10.0 + ", " + 
+    //   Math.round(desiredSpeed.poseMeters.getRotation().getDegrees()*100.0)/10.0);
+    // autoSpeedEntry.setString(Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
+    //   Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
+    //   Math.round(targetChassisSpeeds.omegaRadiansPerSecond*100.0)/10.0);
+    // odoEntry.setString(Math.round(m_subsystem.getPose().getX()*100.0)/10.0 + ", " + 
+    //   Math.round(m_subsystem.getPose().getY()*100.0)/10.0 + ", " + 
+    //   Math.round(m_subsystem.getPose().getRotation().getDegrees()*100.0)/10.0);
   }
 
   // Called once the command ends or is interrupted.
