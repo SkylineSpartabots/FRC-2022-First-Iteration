@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -48,13 +47,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-  public ChassisSpeeds getChassisSpeeds(){
-    return m_chassisSpeeds;
-  }
-  private final Field2d m_field = new Field2d();
-  public Field2d getField(){
-    return m_field;
-  }
+  public Field2d m_field = new Field2d();
 
   private static DrivetrainSubsystem m_instance = null;
   public static DrivetrainSubsystem getInstance(){
@@ -66,8 +59,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DrivetrainSubsystem() {
     setDefaultCommand(new TeleopDriveCommand(this));
-    
-    
+
+    SmartDashboard.putData(m_field);
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
@@ -100,8 +93,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
     m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, 
       DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
-
-    SmartDashboard.putData("Field", m_field);    
   }
 
   /**
@@ -143,7 +134,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void resetOdometryFromPosition(Pose2d pose) {
     m_navx.reset();
     rotationOffset = pose.getRotation().getDegrees();
-    m_odometry.resetPosition(pose, new Rotation2d(rotationOffset));
+    Rotation2d newRot = new Rotation2d(rotationOffset);
+    m_odometry.resetPosition(new Pose2d(pose.getX(), pose.getY(), newRot), newRot);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -153,7 +145,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {    
-    m_field.setRobotPose(m_odometry.getPoseMeters());  
+    var pose = m_odometry.getPoseMeters();
+
+    SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+    SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
+    
+  m_field.setRobotPose(pose);
   }
 
   public void applyDrive() {

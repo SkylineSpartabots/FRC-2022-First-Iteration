@@ -32,6 +32,6 @@ public class IntakeSubsystem extends SubsystemBase{
     }
     
     public void setIntakePercentPower(double power) {
-        m_IntakeMotor.set(ControlMode.PercentOutput, power);
+        //m_IntakeMotor.set(ControlMode.PercentOutput, power);
     }
 }

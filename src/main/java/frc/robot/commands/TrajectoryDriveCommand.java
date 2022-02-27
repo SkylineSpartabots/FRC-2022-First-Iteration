@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 
 import java.util.List;
 
+import javax.swing.plaf.TreeUI;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,11 +24,10 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class TrajectoryDriveCommand extends CommandBase {
@@ -40,7 +40,6 @@ public class TrajectoryDriveCommand extends CommandBase {
   //SET MAX SPEED AND MAX ACCELERATION
   private final double maxSpeed = 2;
   private final double maxAcceleration = 2;
-  
   
 
   double endX, endY, endRotation;
@@ -79,19 +78,6 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   private final Timer m_timer = new Timer();
 
-  //SHUFFLEBOARD
-  ShuffleboardTab t = Shuffleboard.getTab("Trajectory");
-  // NetworkTableEntry timeEntry = t.add("Elapsed Time", 0).getEntry();
-  // NetworkTableEntry accelEntry = t.add("Desired acceleration", 0).getEntry();
-  // NetworkTableEntry velEntry = t.add("Desired velocity", 0).getEntry();
-  // NetworkTableEntry curvEntry = t.add("Desired Curvature", 0).getEntry();
-  // NetworkTableEntry desTimeEntry = t.add("Desired Time", 0).getEntry();
-  // NetworkTableEntry endRotEntry = t.add("End Rotation",0).getEntry();
-  // NetworkTableEntry poseEntry = t.add("Desired Pose", 0).getEntry();
-  // NetworkTableEntry autoSpeedEntry = t.add("Auto Speed", 0).getEntry();
-  // NetworkTableEntry odoEntry = t.add("Odo ", 0).getEntry();
-  
-
   @Override
   public void initialize() {
     PIDController xController = new PIDController(1, 0, 0);
@@ -108,11 +94,11 @@ public class TrajectoryDriveCommand extends CommandBase {
       new Pose2d(endX, endY, new Rotation2d(Math.toRadians(endRotation))), config);
     m_endRotation = new Rotation2d(Math.toRadians(endRotation));
 
-    t.add("Projected Time", m_trajectory.getTotalTimeSeconds());
-    m_subsystem.getField().getObject("traj").setTrajectory(m_trajectory);//prints trajectory
-
+    SmartDashboard.putNumber("Projected Time", m_trajectory.getTotalTimeSeconds());
     m_timer.reset();
     m_timer.start();
+
+    m_subsystem.m_field.getObject("traj").setTrajectory(m_trajectory);
 
   }
 
@@ -124,22 +110,17 @@ public class TrajectoryDriveCommand extends CommandBase {
       new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
 
-    //SHUFFLEBOARD
-    // timeEntry.setDouble(m_timer.get());
-    // accelEntry.setDouble(desiredSpeed.accelerationMetersPerSecondSq);
-    // velEntry.setDouble(desiredSpeed.velocityMetersPerSecond);
-    // curvEntry.setDouble(desiredSpeed.curvatureRadPerMeter);
-    // desTimeEntry.setDouble(desiredSpeed.timeSeconds);
-    // endRotEntry.setDouble(m_endRotation.getDegrees());
-    // poseEntry.setString(Math.round(desiredSpeed.poseMeters.getX()*100.0)/10.0 + ", " + 
-    //   Math.round(desiredSpeed.poseMeters.getY()*100.0)/10.0 + ", " + 
-    //   Math.round(desiredSpeed.poseMeters.getRotation().getDegrees()*100.0)/10.0);
-    // autoSpeedEntry.setString(Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
-    //   Math.round(targetChassisSpeeds.vxMetersPerSecond*100.0)/10.0 + ", " + 
-    //   Math.round(targetChassisSpeeds.omegaRadiansPerSecond*100.0)/10.0);
-    // odoEntry.setString(Math.round(m_subsystem.getPose().getX()*100.0)/10.0 + ", " + 
-    //   Math.round(m_subsystem.getPose().getY()*100.0)/10.0 + ", " + 
-    //   Math.round(m_subsystem.getPose().getRotation().getDegrees()*100.0)/10.0);
+    SmartDashboard.putNumber("Elapsed Time", m_timer.get());
+    SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
+    SmartDashboard.putNumber("Desired velocity", desiredSpeed.velocityMetersPerSecond);
+    SmartDashboard.putNumber("DesiredX", desiredSpeed.poseMeters.getX());
+    SmartDashboard.putNumber("DesiredY", desiredSpeed.poseMeters.getY());
+    SmartDashboard.putNumber("DesiredRot", desiredSpeed.poseMeters.getRotation().getDegrees());
+    SmartDashboard.putNumber("Desired Time", desiredSpeed.timeSeconds);
+    SmartDashboard.putNumber("End Rotation", m_endRotation.getDegrees());
+    SmartDashboard.putNumber("Auto X Speed", targetChassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Auto Y Speed", targetChassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);
   }
 
   // Called once the command ends or is interrupted.
