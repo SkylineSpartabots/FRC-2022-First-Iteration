@@ -26,6 +26,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -88,6 +89,8 @@ public class TrajectoryDriveCommand extends CommandBase {
     m_timer.reset();
     m_timer.start();
 
+    m_subsystem.m_field.getObject("traj").setTrajectory(m_trajectory);
+
   }
 
   @Override
@@ -101,14 +104,14 @@ public class TrajectoryDriveCommand extends CommandBase {
     SmartDashboard.putNumber("Elapsed Time", m_timer.get());
     SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
     SmartDashboard.putNumber("Desired velocity", desiredSpeed.velocityMetersPerSecond);
-    SmartDashboard.putNumber("Desired Curvature", desiredSpeed.curvatureRadPerMeter);
-    SmartDashboard.putString("Desired Pose", desiredSpeed.poseMeters.getX() + ", " + desiredSpeed.poseMeters.getY() + ", " + desiredSpeed.poseMeters.getRotation().getDegrees());
+    SmartDashboard.putNumber("DesiredX", desiredSpeed.poseMeters.getX());
+    SmartDashboard.putNumber("DesiredY", desiredSpeed.poseMeters.getY());
+    SmartDashboard.putNumber("DesiredRot", desiredSpeed.poseMeters.getRotation().getDegrees());
     SmartDashboard.putNumber("Desired Time", desiredSpeed.timeSeconds);
     SmartDashboard.putNumber("End Rotation", m_endRotation.getDegrees());
     SmartDashboard.putNumber("Auto X Speed", targetChassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Auto Y Speed", targetChassisSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);
-    SmartDashboard.putNumber("Odo Rot", m_subsystem.getPose().getRotation().getDegrees());
   }
 
   // Called once the command ends or is interrupted.

@@ -23,6 +23,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -72,6 +73,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+  public Field2d m_field = new Field2d();
 
   private static DrivetrainSubsystem m_instance = null;
   public static DrivetrainSubsystem getInstance(){
@@ -83,6 +85,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DrivetrainSubsystem() {
     setDefaultCommand(new TeleopDriveCommand(this));
+
+    SmartDashboard.putData(m_field);
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
@@ -161,6 +165,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
     SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
     SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
+    
+  m_field.setRobotPose(pose);
   }
 
   public void applyDrive() {

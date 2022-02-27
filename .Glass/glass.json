@@ -1,0 +1,48 @@
+{
+  "NetworkTables": {
+    "Shuffleboard": {
+      ".metadata": {
+        "Drivetrain": {
+          "Back Left Module": {
+            "Absolute Encoder Angle": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
+      "Drivetrain": {
+        "open": true
+      },
+      "Robot": {
+        "open": true
+      },
+      "Teleop Drive": {
+        "open": true
+      },
+      "Trajectory": {
+        "open": true
+      },
+      "open": true
+    },
+    "SmartDashboard": {
+      "Field": {
+        "open": true
+      },
+      "open": true
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[4]": "Gyro",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client",
+    "serverTeam": "2976"
+  }
+}
