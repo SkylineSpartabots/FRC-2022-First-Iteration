@@ -137,14 +137,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //resets to 0,0
   public void resetOdometry() {
-    final double startX = 7.70;
-    final double startY = 2.80;
-    final double startRot = -110;
-    resetOdometryFromPosition(startX, startY, startRot);
-    /*
     m_navx.reset();
-    rotationOffset = -360;
-    m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));*/
+    rotationOffset = 0;
+    m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));
   }
   
   //resets from offset
