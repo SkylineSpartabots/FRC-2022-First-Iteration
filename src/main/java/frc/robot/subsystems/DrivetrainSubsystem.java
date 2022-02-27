@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,7 +23,6 @@ import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -74,13 +72,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-  public ChassisSpeeds getChassisSpeeds(){
-    return m_chassisSpeeds;
-  }
-  private final Field2d m_field = new Field2d();
-  public Field2d getField(){
-    return m_field;
-  }
 
   private static DrivetrainSubsystem m_instance = null;
   public static DrivetrainSubsystem getInstance(){
@@ -92,8 +83,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DrivetrainSubsystem() {
     setDefaultCommand(new TeleopDriveCommand(this));
-    
-    
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
@@ -121,7 +110,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
     m_feedforward = new SimpleMotorFeedforward(0.50673, 0.34619, 0.018907);
-    SmartDashboard.putData("Field", m_field);    
+    
   }
 
   /**
@@ -167,7 +156,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {    
-    m_field.setRobotPose(m_odometry.getPoseMeters());  
+    var pose = m_odometry.getPoseMeters();
+
+    SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+    SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
   }
 
   public void applyDrive() {
