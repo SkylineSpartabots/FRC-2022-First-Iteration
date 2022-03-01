@@ -26,7 +26,6 @@ public class Controller {
         back = new Button(xbox::getBackButton);
         start = new Button(xbox::getStartButton);
     }
-    
 
     public Trigger getButtonCombo(Button b1, Button b2){
         return new Trigger(){

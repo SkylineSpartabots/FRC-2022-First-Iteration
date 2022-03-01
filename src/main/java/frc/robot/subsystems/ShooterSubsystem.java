@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -11,8 +10,8 @@ import frc.lib.drivers.TalonFXFactory;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import frc.lib.drivers.PheonixUtil;
 import frc.robot.Constants;
+import frc.robot.Constants.Ports;
 
 public class ShooterSubsystem extends SubsystemBase {
     //get instance
@@ -27,9 +26,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private final LazyTalonFX mMasterShooter, mSlaveShooter;  
 
     private ShooterSubsystem() {
-        mMasterShooter = TalonFXFactory.createDefaultFalcon("Master Shooter Motor", 21);
+        mMasterShooter = TalonFXFactory.createDefaultFalcon("Master Shooter Motor", Ports.MASTER_SHOOTER_MOTOR);
         configureMotor(mMasterShooter, true);
-        mSlaveShooter = TalonFXFactory.createSlaveFalcon("Slave Shooter Motor", 22, 21);
+        mSlaveShooter = TalonFXFactory.createSlaveFalcon("Follower Shooter Motor", Ports.FOLLOW_SHOOTER_MOTOR, Ports.MASTER_SHOOTER_MOTOR);
         mSlaveShooter.setMaster(mMasterShooter);
         configureMotor(mSlaveShooter, false);
 

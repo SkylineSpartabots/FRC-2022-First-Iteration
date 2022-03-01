@@ -4,13 +4,17 @@
 
 package frc.robot.commands;
 
-import static frc.robot.Constants.*;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
+import java.util.List;
+
+
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,76 +22,72 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.util.List;
 
 public class TrajectoryDriveCommand extends CommandBase {
-  // @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DrivetrainSubsystem m_subsystem;
 
-  private TrajectoryConfig m_config;
   private Trajectory m_trajectory;
   private Rotation2d m_endRotation;
-  private final HolonomicDriveController m_controller;
+  private HolonomicDriveController m_controller;
+
+  //SET MAX SPEED AND MAX ACCELERATION
+  private final double maxSpeed = 2;
+  private final double maxAcceleration = 1;
+  
+
+  double endX, endY, endRotation;
+  List<Translation2d> interiorPoints;
+  boolean reverse;
+
+  public TrajectoryDriveCommand(Pose2d endPose, List<Translation2d> interiorPoints, boolean reverse){
+    this();
+    this.endX = endPose.getX();
+    this.endY = endPose.getY();
+    this.endRotation = endPose.getRotation().getDegrees();
+    this.interiorPoints = interiorPoints;
+    this.reverse = reverse;
+  }
+
+  private TrajectoryDriveCommand(){
+    m_subsystem = DrivetrainSubsystem.getInstance();
+    addRequirements(m_subsystem); //add requirements
+  }
 
   private final Timer m_timer = new Timer();
 
-  public TrajectoryDriveCommand(
-      List<Translation2d> p_interiorWaypoints,
-      Pose2d p_end,
-      boolean p_enablePID) {
-    this(p_enablePID);
-    this.withName("DriveTo_" + p_end.toString());
-
-    m_config = new TrajectoryConfig(1, 1)// speed set to 0.5 m/s, acceleration of 1 m/s
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    m_trajectory = TrajectoryGenerator.generateTrajectory(m_subsystem.getPose(), p_interiorWaypoints, p_end, m_config);
-    m_endRotation = p_end.getRotation();
-  }
-
-  public TrajectoryDriveCommand(
-      Trajectory p_trajectory,
-      boolean p_enablePID) {
-    this(p_enablePID);
-
-    m_trajectory = p_trajectory;
-    var endPose = p_trajectory.getStates().get(m_trajectory.getStates().size() - 1).poseMeters;
-    this.withName("TrajectoryFollowTo_" + endPose.toString());
-    m_endRotation = endPose.getRotation();
-  }
-
-  private TrajectoryDriveCommand(boolean p_enablePID) {
-    m_subsystem = DrivetrainSubsystem.getInstance();
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_subsystem);
-
-    var xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    var yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    var thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
-        AutoConstants.kThetaControllerConstraints);
+  @Override
+  public void initialize() {
+    PIDController xController = new PIDController(1, 0, 0);
+    PIDController yController = new PIDController(1, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
-    m_controller.setEnabled(p_enablePID);
-  }
+    m_controller.setEnabled(false);
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+    TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics).setReversed(reverse);
+    
+    m_trajectory = TrajectoryGenerator.generateTrajectory(m_subsystem.getPose(), interiorPoints,
+      new Pose2d(endX, endY, new Rotation2d(Math.toRadians(endRotation))), config);
+    m_endRotation = new Rotation2d(Math.toRadians(endRotation));
+
+    SmartDashboard.putNumber("Projected Time", m_trajectory.getTotalTimeSeconds());
     m_timer.reset();
     m_timer.start();
+
+    m_subsystem.getField().getObject("traj").setTrajectory(m_trajectory);
   }
 
   @Override
   public void execute() {
-    double curTime = m_timer.get();
-    var desiredState = m_trajectory.sample(curTime);
-
-    var targetChassisSpeeds = m_controller.calculate(m_subsystem.getPose(), desiredState, m_endRotation);
+    var desiredSpeed  = m_trajectory.sample(m_timer.get());
+    ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
+      new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
   }
 

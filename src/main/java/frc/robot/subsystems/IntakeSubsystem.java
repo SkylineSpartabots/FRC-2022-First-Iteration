@@ -8,6 +8,7 @@ import frc.lib.drivers.LazyTalonFX;
 import frc.lib.drivers.PheonixUtil;
 import frc.lib.drivers.TalonFXFactory;
 import frc.robot.Constants;
+import frc.robot.Constants.Ports;
 
 public class IntakeSubsystem extends SubsystemBase{   
 
@@ -23,7 +24,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     public IntakeSubsystem() {
-        m_IntakeMotor = TalonFXFactory.createDefaultFalcon("Shooter Motor", 31);//creates motor
+        m_IntakeMotor = TalonFXFactory.createDefaultFalcon("Intake Motor", Ports.INTAKE_MOTOR);//creates motor
         //configure motor
         m_IntakeMotor.configVoltageCompSaturation(12.0, Constants.kTimeOutMs);
         m_IntakeMotor.enableVoltageCompensation(true);        
