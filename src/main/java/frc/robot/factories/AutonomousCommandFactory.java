@@ -1,6 +1,7 @@
 package frc.robot.factories;
 
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +24,6 @@ public class AutonomousCommandFactory {
     // Called upon initialization of RobotContainer
     public static void swapAutonomousCommands() {
         m_chooser.setDefaultOption("Blue Four Ball Auto Bottom Left", blueFourBallAuto());
-        //m_chooser.addOption("Big Circle Auto", bigCircle());
 
         // Put the chooser on the dashboard
         SmartDashboard.putData(m_chooser);
@@ -33,20 +33,21 @@ public class AutonomousCommandFactory {
         return m_chooser.getSelected();
     }
 
+
     public static Command blueFourBallAuto(){
         DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
-        final double startX = 7.70;
-        final double startY = 2.80;
+        final double startX = 7.82;
+        final double startY = 2.97;
         final double startRot = -110;
-        final double pos1X = 5.41;
-        final double pos1Y = 1.76;
-        final double pos1Rot = 145;
-        final double pos2X = 1.56;
-        final double pos2Y = 1.55;
-        final double pos2Rot = -135;
+        final double pos1X = 5.36;
+        final double pos1Y = 1.98;
+        final double pos1Rot = -160;
+        final double pos2X = 1.45;
+        final double pos2Y = 1.37;
+        final double pos2Rot = -137;
         final double pos3X = 7.63;
-        final double pos3Y = 0.78;
+        final double pos3Y = 0.65;
         final double pos3Rot = -90;
         
         //SET STARTING POSITION
@@ -55,8 +56,8 @@ public class AutonomousCommandFactory {
         //startX, startY, startRot, endX, endY, endRot
         Command turnOnIntake = new SetIntakeCommand(intakeOn);
         Command rampUpShooter = new SetShooterCommand(shooterRamp);
-        Command driveToFirstBall = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot, List.of(new Translation2d(6.29, 1.37)), false);
-        Command driveBackToShoot = new TrajectoryDriveCommand(startX, startY, startRot,List.of(new Translation2d(6.29, 1.37)), true);
+        Command driveToFirstBall = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot, List.of(), false);
+        Command driveBackToShoot = new TrajectoryDriveCommand(startX, startY, startRot,List.of(), true);
         Command fireIndexer = new SetIndexerCommand(indexerFire);
         Command waitForShooterToFinish = new WaitCommand(2);
         Command turnOffIndexer = new SetIndexerCommand(indexerOff);
@@ -84,7 +85,7 @@ public class AutonomousCommandFactory {
             waitForShooterToFinish2,
             turnOffIndexer2,
             turnOffShooter,
-            driveToThirdBall,
+            //driveToThirdBall,
             turnIntakeOff
         );
     }

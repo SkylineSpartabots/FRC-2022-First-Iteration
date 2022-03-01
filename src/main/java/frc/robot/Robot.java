@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
         () -> {
           DrivetrainSubsystem.getInstance().applyDrive();
         },
-        0.005, // drive at higher frequency
+        0.02, // drive at higher frequency
         0.000);
   }
 

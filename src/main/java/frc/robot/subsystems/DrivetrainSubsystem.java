@@ -113,7 +113,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Mk4SwerveModuleHelper.GearRatio.L2, 6, 5, 11, -Math.toRadians(234.228515625));
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
-    m_feedforward = new SimpleMotorFeedforward(0.50673, 0.34619, 0.018907);
+    m_feedforward = new SimpleMotorFeedforward(0.67901, 0.10443, 0.015558);
     
   }
 
@@ -146,6 +146,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));
   }
   
+  
+  //resets to 0,0
+  public void resetFromStart() {
+    
+    final double startX = 7.82;
+    final double startY = 2.97;
+    final double startRot = -110;
+    resetOdometryFromPosition(startX, startY, startRot);
+  }
+
   //resets from offset
   public void resetOdometryFromPosition(double x, double y, double rot) {
     m_navx.reset();

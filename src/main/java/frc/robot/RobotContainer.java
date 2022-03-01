@@ -75,7 +75,8 @@ public class RobotContainer {
 
     // back button
     m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::resetOdometry);// resets odometry and heading
-    
+    m_controller.getXButton().whenPressed(m_drivetrainSubsystem::resetFromStart);// resets odometry and heading
+
      //left triggers and bumpers
      Trigger leftTriggerAxis = new Trigger(() -> { return m_controller.getLeftTriggerAxis() > triggerDeadzone;});//left trigger deadzone 0.8
      leftTriggerAxis.whenActive(new SetShooterCommand(shooterRamp));//on trigger hold

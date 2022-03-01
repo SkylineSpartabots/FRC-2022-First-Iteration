@@ -39,7 +39,7 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   //SET MAX SPEED AND MAX ACCELERATION
   private final double maxSpeed = 2;
-  private final double maxAcceleration = 2;
+  private final double maxAcceleration = 1;
   
 
   double endX, endY, endRotation;
@@ -77,7 +77,7 @@ public class TrajectoryDriveCommand extends CommandBase {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
-    m_controller.setEnabled(true);
+    m_controller.setEnabled(false);
 
     TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics).setReversed(reverse);
     

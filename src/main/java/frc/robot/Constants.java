@@ -23,7 +23,7 @@ public final class Constants {
     public static final double indexerDown = -0.2;
     public static final double indexerFire = 0.6;
 
-    public static final double intakeOn = 0.8;
+    public static final double intakeOn = 0.5;
     public static final double intakeOff = 0.0;
     public static final double intakeReverse = -0.5;
 
