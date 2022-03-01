@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+import edu.wpi.first.wpilibj.util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -261,8 +262,16 @@ public final class Constants {
     public static final class Turret {
         /*
          *  TODO: ensure that this is a real number. the "0.1" i shoved here is arbitrary
-         *   because either me or build is too lazy to build a turret and figure out constants
+         *  because either me or build is too lazy to build a turret and figure out constants
          */
         public static final double turnCoefficient = 0.1;
+    }
+    public static final class ColorSensor {
+        /*
+         * TODO make the color value real values that actually align with the red/blue ball
+         * these values were arbitrarily chosen
+         */
+        public static final Color red = new Color(0.8,0.2,0.2);
+        public static final Color blue = new Color(0.8,0.2,0.2);
     }
 }
