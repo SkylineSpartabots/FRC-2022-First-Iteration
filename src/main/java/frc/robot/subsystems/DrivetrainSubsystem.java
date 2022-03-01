@@ -7,7 +7,6 @@ import static frc.robot.Constants.*;
 import com.kauailabs.navx.frc.AHRS;
 
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
-import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -19,7 +18,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -47,7 +45,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-  public Field2d m_field = new Field2d();
+  private Field2d m_field = new Field2d();
+  public Field2d getField(){return m_field;}
 
   private static DrivetrainSubsystem m_instance = null;
   public static DrivetrainSubsystem getInstance(){
@@ -91,14 +90,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
             Ports.BACK_RIGHT_STEER_ENCODER, Ports.BACK_RIGHT_OFFSET); 
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
-    m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, 
-      DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
+    m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
   }
 
-  /**
-   * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
-   * 'forwards' direction.
-   */
+  //sets Gyroscope to 0
   public void zeroGyroscope() {
     m_navx.zeroYaw();
   }
@@ -122,12 +117,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_navx.reset();
     rotationOffset = 0;
     m_odometry.resetPosition(new Pose2d(), new Rotation2d(rotationOffset));
-  }
+  }  
   
-  
-  //resets to 0,0
-  public void resetFromStart() {
-    
+  //resets to start position (for blue four/five ball auto)
+  public void resetFromStart() {    
     final double startX = 7.82;
     final double startY = 2.97;
     final double startRot = -110;
@@ -142,27 +135,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void resetOdometryFromPosition(Pose2d pose) {
-    m_navx.reset();
-    
+    m_navx.reset();    
     rotationOffset = pose.getRotation().getDegrees();
-    Rotation2d newRot = new Rotation2d(rotationOffset);
-    m_odometry.resetPosition(new Pose2d(pose.getX(), pose.getY(), newRot), newRot);
+    m_odometry.resetPosition(pose, pose.getRotation());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
   }
 
-
   @Override
   public void periodic() {    
-    var pose = m_odometry.getPoseMeters();
-
-    SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
-    SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
-    SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
-    
-  m_field.setRobotPose(pose);
+    var pose = m_odometry.getPoseMeters();    
+    m_field.setRobotPose(pose);
   }
 
   public void applyDrive() {

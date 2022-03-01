@@ -45,9 +45,9 @@ public final class Constants {
         public static final boolean kGyroReversed = false;
 
         //Calculated via SysId
-        public static final double ksVolts = 0.50673;
-        public static final double kvVoltSecondsPerMeter = 0.34619;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.018907;
+        public static final double ksVolts = 0.67901;
+        public static final double kvVoltSecondsPerMeter = 0.10443;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.015558;
 
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;

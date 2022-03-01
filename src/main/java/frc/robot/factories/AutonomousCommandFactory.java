@@ -1,7 +1,6 @@
 package frc.robot.factories;
 
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +12,6 @@ import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import static frc.robot.Constants.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousCommandFactory {
@@ -40,10 +38,10 @@ public class AutonomousCommandFactory {
     public static Command blueFourBallAuto(){
         DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
-        Pose2d startPose = getPose(7.7, 2.8, -110);
-        Pose2d ball1 = getPose(5.41, 1.76, 145);
-        Pose2d ball2 = getPose(1.56, 1.55, -135);
-        Pose2d ball3 = getPose(7.63, 0.78, -90);
+        Pose2d startPose = getPose(7.82, 2.97, -110);
+        Pose2d ball1 = getPose(5.36, 1.98, -160);
+        Pose2d ball2 = getPose(1.45, 1.37, -137);
+        Pose2d ball3 = getPose(7.63, 0.65, -90);
 
         //SET STARTING POSITION
         Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startPose), m_drivetrainSubsystem);
@@ -80,7 +78,7 @@ public class AutonomousCommandFactory {
             waitForShooterToFinish2,
             turnOffIndexer2,
             turnOffShooter,
-            //driveToThirdBall,
+            driveToThirdBall,
             turnIntakeOff
         );
     }
