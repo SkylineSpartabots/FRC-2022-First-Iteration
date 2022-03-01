@@ -13,6 +13,7 @@ import frc.robot.commands.SetSubsystemCommand.*;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import static frc.robot.Constants.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousCommandFactory {
@@ -33,41 +34,35 @@ public class AutonomousCommandFactory {
         return m_chooser.getSelected();
     }
 
-
+    public static Pose2d getPose(double x, double y, double rot){
+       return new Pose2d(x, y, new Rotation2d(Math.toRadians(rot)));
+    }
     public static Command blueFourBallAuto(){
         DrivetrainSubsystem m_drivetrainSubsystem = DrivetrainSubsystem.getInstance();
 
-        final double startX = 7.82;
-        final double startY = 2.97;
-        final double startRot = -110;
-        final double pos1X = 5.36;
-        final double pos1Y = 1.98;
-        final double pos1Rot = -160;
-        final double pos2X = 1.45;
-        final double pos2Y = 1.37;
-        final double pos2Rot = -137;
-        final double pos3X = 7.63;
-        final double pos3Y = 0.65;
-        final double pos3Rot = -90;
-        
+        Pose2d startPose = getPose(7.7, 2.8, -110);
+        Pose2d ball1 = getPose(5.41, 1.76, 145);
+        Pose2d ball2 = getPose(1.56, 1.55, -135);
+        Pose2d ball3 = getPose(7.63, 0.78, -90);
+
         //SET STARTING POSITION
-        Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startX, startY, startRot), m_drivetrainSubsystem);
+        Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startPose), m_drivetrainSubsystem);
 
         //startX, startY, startRot, endX, endY, endRot
         Command turnOnIntake = new SetIntakeCommand(intakeOn);
         Command rampUpShooter = new SetShooterCommand(shooterRamp);
-        Command driveToFirstBall = new TrajectoryDriveCommand(pos1X, pos1Y, pos1Rot, List.of(), false);
-        Command driveBackToShoot = new TrajectoryDriveCommand(startX, startY, startRot,List.of(), true);
+        Command driveToFirstBall = new TrajectoryDriveCommand(ball1, List.of(new Translation2d(6.29, 1.37)), false);
+        Command driveBackToShoot = new TrajectoryDriveCommand(startPose,List.of(new Translation2d(6.29, 1.37)), true);
         Command fireIndexer = new SetIndexerCommand(indexerFire);
         Command waitForShooterToFinish = new WaitCommand(2);
         Command turnOffIndexer = new SetIndexerCommand(indexerOff);
-        Command driveToSecondBall = new TrajectoryDriveCommand(pos2X, pos2Y, pos2Rot,List.of(new Translation2d(4.25, 1.52)), false);
-        Command driveBackToShootSecondTime = new TrajectoryDriveCommand(startX, startY, startRot,List.of(new Translation2d(4.25, 1.52)),true);
+        Command driveToSecondBall = new TrajectoryDriveCommand(ball2, List.of(new Translation2d(4.25, 1.52)), false);
+        Command driveBackToShootSecondTime = new TrajectoryDriveCommand(startPose,List.of(new Translation2d(4.25, 1.52)),true);
         Command fireIndexer2 = new SetIndexerCommand(indexerFire);
         Command waitForShooterToFinish2 = new WaitCommand(2);
         Command turnOffIndexer2 = new SetIndexerCommand(indexerOff);
         Command turnOffShooter = new SetShooterCommand(shooterOff);
-        Command driveToThirdBall = new TrajectoryDriveCommand(pos3X, pos3Y, pos3Rot,List.of(), false);
+        Command driveToThirdBall = new TrajectoryDriveCommand(ball3, List.of(), false);
         Command turnIntakeOff = new SetIntakeCommand(intakeOff);
 
         return new SequentialCommandGroup(
@@ -89,5 +84,4 @@ public class AutonomousCommandFactory {
             turnIntakeOff
         );
     }
-
 }

@@ -53,6 +53,15 @@ public class TrajectoryDriveCommand extends CommandBase {
       this.interiorPoints = interiorPoints;
       this.reverse = reverse;
   }
+
+  public TrajectoryDriveCommand(Pose2d endPose, List<Translation2d> interiorPoints, boolean reverse){
+    this();
+    this.endX = endPose.getX();
+    this.endY = endPose.getY();
+    this.endRotation = endPose.getRotation().getDegrees();
+    this.interiorPoints = interiorPoints;
+    this.reverse = reverse;
+}
 /*
   public TrajectoryDriveCommand(Trajectory p_trajectory) {
       this();

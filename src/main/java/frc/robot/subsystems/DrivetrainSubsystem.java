@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.commands.TeleopDriveCommand;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -28,39 +29,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DrivetrainSubsystem extends SubsystemBase {
-  /**
-   * The maximum voltage that will be delivered to the drive motors.
-   * <p>
-   * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
-   */
-  public static final double MAX_VOLTAGE = 12.0;
   // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
   //  By default this value is setup for a Mk3 standard module using Falcon500s to drive.
   //  An example of this constant for a Mk4 L2 module with NEOs to drive is:
   //   5880.0 / 60.0 / SdsModuleConfigurations.MK4_L2.getDriveReduction() * SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI
-  /**
-   * The maximum velocity of the robot in meters per second.
-   * <p>
-   * This is a measure of how fast the robot should be able to drive in a straight line.
-   */
-  public static final double MaxSpeedMetersPerSecond = 6380.0 / 60.0 *
-          SdsModuleConfigurations.MK4_L2.getDriveReduction() *
-          SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
-
-  // need measure on robot
-  public static final double MaxAccelerationMetersPerSecondSquared = 10; 
-
-  /**
-   * The maximum angular velocity of the robot in radians per second.
-   * <p>
-   * This is a measure of how fast the robot can rotate in place.
-   */
-  // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
-  public static final double MaxAngularSpeedRadiansPerSecond = MaxSpeedMetersPerSecond /
-          Math.hypot(DriveConstants.kTrackWidth / 2.0, DriveConstants.kWheelBase / 2.0);
-
   private final SwerveDriveOdometry m_odometry;
   private final SimpleMotorFeedforward m_feedforward;
 
@@ -95,26 +69,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
             // This can either be STANDARD or FAST depending on your gear configuration
             Mk4SwerveModuleHelper.GearRatio.L2,
             // Port ID of drive motor, steer motor, steer encoder offset
-            2, 1, 9, -Math.toRadians(301.72576904296875));         
+            Ports.FRONT_LEFT_DRIVE, Ports.FRONT_LEFT_STEER, 
+            Ports.FRONT_LEFT_STEER_ENCODER, Ports.FRONT_LEFT_OFFSET);         
             // Steer Encoder Offset: This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
     
 
     // We will do the same for the other modules
     m_frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0),
-            Mk4SwerveModuleHelper.GearRatio.L2, 8, 7, 12, -Math.toRadians(265.9515380859375));
+            Mk4SwerveModuleHelper.GearRatio.L2, Ports.FRONT_RIGHT_DRIVE, Ports.FRONT_RIGHT_STEER, 
+            Ports.FRONT_RIGHT_STEER_ENCODER, Ports.FRONT_RIGHT_OFFSET); 
 
     m_backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0),
-            Mk4SwerveModuleHelper.GearRatio.L2, 4, 3, 10, -Math.toRadians(246.1761474609375));
+            Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_LEFT_DRIVE, Ports.BACK_LEFT_STEER, 
+            Ports.BACK_LEFT_STEER_ENCODER, Ports.BACK_LEFT_OFFSET); 
 
     m_backRightModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0),
-            Mk4SwerveModuleHelper.GearRatio.L2, 6, 5, 11, -Math.toRadians(234.228515625));
+            Mk4SwerveModuleHelper.GearRatio.L2, Ports.BACK_RIGHT_DRIVE, Ports.BACK_RIGHT_STEER, 
+            Ports.BACK_RIGHT_STEER_ENCODER, Ports.BACK_RIGHT_OFFSET); 
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getGyroscopeRotation());
-    m_feedforward = new SimpleMotorFeedforward(0.67901, 0.10443, 0.015558);
-    
+    m_feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts, 
+      DriveConstants.kvVoltSecondsPerMeter, DriveConstants.kaVoltSecondsSquaredPerMeter);
   }
 
   /**
@@ -163,6 +141,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(new Pose2d(x,y,new Rotation2d(rot)), new Rotation2d(rotationOffset));
   }
 
+  public void resetOdometryFromPosition(Pose2d pose) {
+    m_navx.reset();
+    
+    rotationOffset = pose.getRotation().getDegrees();
+    Rotation2d newRot = new Rotation2d(rotationOffset);
+    m_odometry.resetPosition(new Pose2d(pose.getX(), pose.getY(), newRot), newRot);
+  }
+
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
   }
@@ -181,7 +167,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void applyDrive() {
     SwerveModuleState[] states = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MaxSpeedMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.kMaxSpeedMetersPerSecond);
 
     m_frontLeftModule.set(getVoltageByVelocity(states[0].speedMetersPerSecond), states[0].angle.getRadians());
     m_frontRightModule.set(getVoltageByVelocity(states[1].speedMetersPerSecond), states[1].angle.getRadians());
@@ -196,6 +182,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   
   public double getVoltageByVelocity(double targetVelocity){
-    return m_feedforward.calculate(targetVelocity * 6);
+    return m_feedforward.calculate(targetVelocity * DriveConstants.kVelocityGain);
   }
 }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
@@ -42,6 +44,58 @@ public final class Constants {
 
         public static final boolean kGyroReversed = false;
 
+        //Calculated via SysId
+        public static final double ksVolts = 0.50673;
+        public static final double kvVoltSecondsPerMeter = 0.34619;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.018907;
+
+        //Tuned to taste for desired max velocity
+        public static final double kVelocityGain = 6;
+
+        // The maximum voltage that will be delivered to the drive motors.
+        // This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
+        public static final double kMaxVoltage = 12.0;
+
+        // The maximum velocity of the robot in meters per second.
+        // This is a measure of how fast the robot should be able to drive in a straight line.
+        public static final double kMaxSpeedMetersPerSecond = 6380.0 / 60.0 *
+               SdsModuleConfigurations.MK4_L2.getDriveReduction() *
+               SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
+     
+       // need measure on robot
+       public static final double kMaxAccelerationMetersPerSecondSquared = 10; 
+
+       //The maximum angular velocity of the robot in radians per second.
+       //This is a measure of how fast the robot can rotate in place.
+       // Here we calculate the theoretical maximum angular velocity. You can also replace this with a measured amount.
+       public static final double kMaxAngularSpeedRadiansPerSecond = kMaxSpeedMetersPerSecond /
+              Math.hypot(kTrackWidth / 2.0, kWheelBase / 2.0);
     }
 
+    public static final class Ports{
+        public static final int FRONT_LEFT_DRIVE = 2;
+        public static final int FRONT_LEFT_STEER = 1;
+        public static final int FRONT_LEFT_STEER_ENCODER = 9;
+        public static final double FRONT_LEFT_OFFSET = -Math.toRadians(301.72576904296875);
+
+        public static final int FRONT_RIGHT_DRIVE = 8;
+        public static final int FRONT_RIGHT_STEER = 7;
+        public static final int FRONT_RIGHT_STEER_ENCODER = 12;
+        public static final double FRONT_RIGHT_OFFSET = -Math.toRadians(265.9515380859375);
+
+        public static final int BACK_LEFT_DRIVE = 4;
+        public static final int BACK_LEFT_STEER = 3;
+        public static final int BACK_LEFT_STEER_ENCODER = 10;
+        public static final double BACK_LEFT_OFFSET = -Math.toRadians(246.1761474609375);
+
+        public static final int BACK_RIGHT_DRIVE = 6;
+        public static final int BACK_RIGHT_STEER = 5;
+        public static final int BACK_RIGHT_STEER_ENCODER = 11;
+        public static final double BACK_RIGHT_OFFSET = -Math.toRadians(234.228515625);
+
+        public static final int MASTER_SHOOTER_MOTOR = 21;
+        public static final int FOLLOW_SHOOTER_MOTOR = 22;
+        public static final int INTAKE_MOTOR = 31;
+        public static final int INDEXER_MOTOR = 32;
+    }
 }
