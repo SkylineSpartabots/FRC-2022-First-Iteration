@@ -146,7 +146,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {    
-    var pose = m_odometry.getPoseMeters();    
+    var pose = m_odometry.getPoseMeters();   
+    
+    SmartDashboard.putNumber("X Position", pose.getTranslation().getX());
+    SmartDashboard.putNumber("Y Position", pose.getTranslation().getY());
+    SmartDashboard.putNumber("Rotation", getGyroscopeRotation().getDegrees());
+     
     m_field.setRobotPose(pose);
   }
 

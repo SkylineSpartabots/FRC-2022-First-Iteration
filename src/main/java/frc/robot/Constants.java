@@ -36,6 +36,7 @@ public final class Constants {
         public static final double kWheelBase = 0.4953;
         // Distance between front and back wheels on robot
 
+
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -45,9 +46,9 @@ public final class Constants {
         public static final boolean kGyroReversed = false;
 
         //Calculated via SysId
-        public static final double ksVolts = 0.67901;
-        public static final double kvVoltSecondsPerMeter = 0.10443;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.015558;
+        public static final double ksVolts = 0.70541;
+        public static final double kvVoltSecondsPerMeter = 0.33259;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.016433;
 
         //Tuned to taste for desired max velocity
         public static final double kVelocityGain = 6;
