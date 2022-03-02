@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.drivers.LazyTalonFX;
-import frc.lib.drivers.PheonixUtil;
 import frc.lib.drivers.TalonFXFactory;
 import frc.robot.Constants;
 import frc.robot.Constants.Ports;

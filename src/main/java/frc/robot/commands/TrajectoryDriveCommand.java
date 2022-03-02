@@ -62,13 +62,13 @@ public class TrajectoryDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    PIDController xController = new PIDController(1, 0, 0);
-    PIDController yController = new PIDController(1, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
+    PIDController xController = new PIDController(5, 0, 0);
+    PIDController yController = new PIDController(5, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(4, 0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_controller = new HolonomicDriveController(xController, yController, thetaController);
-    m_controller.setEnabled(false);
+    m_controller.setEnabled(true);
 
     TrajectoryConfig config = new TrajectoryConfig(maxSpeed, maxAcceleration).setKinematics(DriveConstants.kDriveKinematics).setReversed(reverse);
     
@@ -89,6 +89,18 @@ public class TrajectoryDriveCommand extends CommandBase {
     ChassisSpeeds targetChassisSpeeds = m_controller.calculate(
       new Pose2d(m_subsystem.getPose().getX(), m_subsystem.getPose().getY(), m_subsystem.getGyroscopeRotation()), desiredSpeed , m_endRotation);
     m_subsystem.drive(targetChassisSpeeds);
+
+    SmartDashboard.putNumber("Elapsed Time", m_timer.get());
+    SmartDashboard.putNumber("Desired acceleration", desiredSpeed.accelerationMetersPerSecondSq);
+    SmartDashboard.putNumber("Desired velocity", desiredSpeed.velocityMetersPerSecond);
+    SmartDashboard.putNumber("DesiredX", desiredSpeed.poseMeters.getX());
+    SmartDashboard.putNumber("DesiredY", desiredSpeed.poseMeters.getY());
+    SmartDashboard.putNumber("DesiredRot", desiredSpeed.poseMeters.getRotation().getDegrees());
+    SmartDashboard.putNumber("Desired Time", desiredSpeed.timeSeconds);
+    SmartDashboard.putNumber("End Rotation", m_endRotation.getDegrees());
+    SmartDashboard.putNumber("Auto X Speed", targetChassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Auto Y Speed", targetChassisSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("Auto Rot Speed", targetChassisSpeeds.omegaRadiansPerSecond);
   }
 
   // Called once the command ends or is interrupted.
