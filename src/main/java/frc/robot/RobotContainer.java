@@ -8,10 +8,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurnConstants;
-import frc.robot.commands.IndexerPushCommand;
-import frc.robot.commands.shoot.SingleShootCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -33,7 +29,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer{}
+  /*
   // The robot's subsystems and commands are defined here...
   private DrivetrainSubsystem m_drivetrainSubsystem;
   private LimelightSubsystem m_limelight;
@@ -50,7 +47,7 @@ public class RobotContainer {
 
   private final ProfiledPIDController m_thetaController;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  The container for the robot. Contains subsystems, OI devices, and commands.
   public RobotContainer() {
 
     //For CAS PID Profiled alignment
@@ -91,18 +88,13 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  /**
+
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
+  
   private void configureButtonBindings() {
-    m_controller.getBackButton().whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-    m_controller.getBButton().whenPressed(this::resetOdometryFromPosition);
-    m_controller.getXButton().whenPressed(this::softResetOdometryFromReference);
-    m_controller.getYButton().whenPressed(new SingleShootCommand(10));
-    m_controller.getAButton().whenPressed(new IndexerPushCommand());
 
     
     getButtonCombo(m_controller.getXButton(), m_controller.getRightStickButton())
@@ -117,10 +109,6 @@ public class RobotContainer {
         }
     };
 }
-  public DrivetrainSubsystem getDriveTrainSubsystem()
-  {
-    return m_drivetrainSubsystem;
-  }
 
   public void driveWithJoystick() {
     final var xSpeed = -modifyAxis(m_controller.getLeftX()) * DriveConstants.kMaxSpeedMetersPerSecond;
@@ -171,6 +159,7 @@ public class RobotContainer {
     // previousRotSpeed = newRotSpeed;
   }
 
+  /*
   public void resetOdometryFromReference(double threshold){
      Translation2d current = m_drivetrainSubsystem.getPose().getTranslation();
      double minError = FieldConstants.kMinReferenceError;
@@ -246,4 +235,5 @@ public class RobotContainer {
 
     return value;
   }
-}
+  
+}*/

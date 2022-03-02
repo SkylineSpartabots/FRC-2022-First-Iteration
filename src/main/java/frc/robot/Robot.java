@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 import frc.robot.commands.*;
-import frc.robot.commands.drive.DriveCommandFactory;
-import frc.robot.commands.drive.TurnFromOffset;
 import frc.robot.subsystems.*;
 
 /**
@@ -44,13 +42,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    addPeriodic(
-      () -> {
-               DrivetrainSubsystem.getInstance().applyDrive();
-            }, 
-      0.005, // drive at higher frequency
-      0.000);
+    
   }
 
   /**
@@ -60,7 +52,7 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  @Override
+  /*
   public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -74,14 +66,14 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
+  * This function is called once each time the robot enters Disabled mode.
   @Override
   public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
   @Override
   public void autonomousInit() {
     //TODO:
@@ -96,7 +88,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /** This function is called periodically during autonomous. */
+  /** This function is called periodically during autonomous. 
   @Override
   public void autonomousPeriodic() {}
 
@@ -112,7 +104,7 @@ public class Robot extends TimedRobot {
     DrivetrainSubsystem.setDriveConstants(RobotContainer.checkDriveConstantsChooser());
   }
 
-  /** This function is called periodically during operator control. */
+  /** This function is called periodically during operator control. 
   @Override
   public void teleopPeriodic() {
     m_robotContainer.driveWithJoystick();
@@ -139,9 +131,9 @@ public class Robot extends TimedRobot {
     voltageTab.add("VoltageTestCommand", new VoltageTestCommand());*/
   }
 
-  /** This function is called periodically during test mode. */
+  /** This function is called periodically during test mode. 
   @Override
   public void testPeriodic() {
     m_testTab.add("TestRounds", m_testRounds++);
   }
-}
+  */
