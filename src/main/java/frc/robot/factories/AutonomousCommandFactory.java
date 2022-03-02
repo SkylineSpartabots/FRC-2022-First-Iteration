@@ -46,7 +46,6 @@ public class AutonomousCommandFactory {
         //SET STARTING POSITION
         Command resetOdo = new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(startPose), m_drivetrainSubsystem);
 
-        //startX, startY, startRot, endX, endY, endRot
         Command turnOnIntake = new SetIntakeCommand(intakeOn);
         Command rampUpShooter = new SetShooterCommand(shooterRamp);
         Command driveToFirstBall = new TrajectoryDriveCommand(ball1, List.of(), false);
@@ -65,10 +64,7 @@ public class AutonomousCommandFactory {
         Command driveToThirdBall = new TrajectoryDriveCommand(ball3, List.of(), false);
         Command turnIntakeOff = new SetIntakeCommand(intakeOff);
 
-        return new SequentialCommandGroup(
-        /*    new InstantCommand(() ->  m_drivetrainSubsystem.resetOdometryFromPosition(getPose(0,0,0)), m_drivetrainSubsystem),
-            new TrajectoryDriveCommand(getPose(5,0,0), List.of(), false)*/
-        
+        return new SequentialCommandGroup(        
             resetOdo,
             turnOnIntake,
             rampUpShooter,
@@ -79,11 +75,13 @@ public class AutonomousCommandFactory {
             turnOffShooter,
             driveToSecondBall,
             driveBackToShootSecondTime,
-            runIndexerDown,waitForShooterToRamp,fireIndexer2,
+            runIndexerDown,
+            waitForShooterToRamp,
+            fireIndexer2,
             waitForShooterToFinish2,
             turnOffIndexer2,
             turnOffShooter2,
-            //driveToThirdBall,
+            driveToThirdBall,
             turnIntakeOff
         );
     }
