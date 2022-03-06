@@ -4,8 +4,6 @@ package frc.robot.subsystems;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,21 +17,15 @@ public class ColorSensorSubsystem extends SubsystemBase {
     private static final I2C.Port i2cPort = I2C.Port.kOnboard; // unsure what this is, TODO figureout if this works
     private static final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private static final ColorMatch m_colorMatcher = new ColorMatch();
+    private static final double distToBallLoaded = 10; // this is the distance from the color sensor to the ball
     private static ColorSensorSubsystem mInstance;
     private static ColorSensorSubsystem getmInstance = null;
-    private ShuffleboardTab debugTab = Shuffleboard.getTab("Shooter");
-    private NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-    private NetworkTable table = tableInstance.getTable("Shooter");
+    private final ShuffleboardTab debugTab = Shuffleboard.getTab("Color");
+    private static Color detectedColor;
 
     private ColorSensorSubsystem() {
-
         m_colorMatcher.addColorMatch(Constants.ColorSensor.blue);
         m_colorMatcher.addColorMatch(Constants.ColorSensor.red);
-
-//        SmartDashboard.putNumber("Red", detected.red);
-//        SmartDashboard.putNumber("Blue", detected.blue);
-//        SmartDashboard.putNumber("Confidence", match.confidence);
-//        SmartDashboard.putString("Detected Color", detectedColor);
     }
 
     public static ColorSensorSubsystem getInstance() {
@@ -44,14 +36,10 @@ public class ColorSensorSubsystem extends SubsystemBase {
     }
 
     private static ColorMatchResult MatchedColor() {
-        Color detected = m_colorSensor.getColor();
-        Color detectedColor = m_colorSensor.getColor();
-        ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
-        return match;
+        return m_colorMatcher.matchClosestColor(detectedColor);
     }
 
     private static String RedOrBlue() {
-        Color detected = m_colorSensor.getColor();
         String detectedColor;
         final ColorMatchResult match = MatchedColor();
         if (Objects.equals(match.color, Constants.ColorSensor.blue)) {
@@ -64,15 +52,30 @@ public class ColorSensorSubsystem extends SubsystemBase {
         return detectedColor;
     }
 
-/*  @Override
-    public void periodic() {
-
+    public static int getProximity() {
+        return m_colorSensor.getProximity();
     }
+
+    public static boolean ballLoaded() {
+        return getProximity() == distToBallLoaded;
+    }
+
 
     @Override
-    public void simulationPeriodic() {
-        this.periodic();
+    public void periodic() {
+        detectedColor = m_colorSensor.getColor();
+        debugTab.add("proximity to next object", getProximity());
+        debugTab.add("red", detectedColor.red); //gives raw red value
+        debugTab.add("blue", detectedColor.blue);
+        debugTab.add("green", detectedColor.green);
+        debugTab.add("detected color", RedOrBlue());
     }
- */
-    // TODO figure out how to do periodic lol
+
+    /* TODO (in general)
+     *  implement a way to check if a ball is loaded - done, see isBallLoaded
+     *  create 3 color sensors rather than the 1 in code
+     *  periodic
+     *  tune distToBallLoaded var and the Color constants
+     *  ensure the i2cport var works
+     */
 }
