@@ -7,10 +7,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
     private XboxController xbox;
-    private static final byte DPAD_U_PORT = -1;
-    private static final byte DPAD_D_PORT = -3;
-    private static final byte DPAD_L_PORT = -4;
-    private static final byte DPAD_R_PORT = -2;
     private Button a, b, x, y, rb, lb, lstick, rstick, back, start;
     private POVButton up, down, left, right;
     public Controller(XboxController xbox){
@@ -25,6 +21,10 @@ public class Controller {
         rstick = new Button(xbox::getRightStickButton);
         back = new Button(xbox::getBackButton);
         start = new Button(xbox::getStartButton);
+        up = new POVButton(xbox, 0);
+        down = new POVButton(xbox, 180);
+        right = new POVButton(xbox, 90);
+        left = new POVButton(xbox, 270);
     }
 
     public Trigger getButtonCombo(Button b1, Button b2){
@@ -36,10 +36,10 @@ public class Controller {
         };
     }
     
-    public boolean getDpadUp(){ return xbox.getPOV() == 0; }
-    public boolean getDpadRigbt(){ return xbox.getPOV() == 90;}
-    public boolean getDpadDown(){ return xbox.getPOV() == 180;}
-    public boolean getDpadLeft(){ return xbox.getPOV() == 270;}
+    public POVButton getDpadUp(){ return up;}
+    public POVButton getDpadRight(){ return right;}
+    public POVButton getDpadDown(){ return down;}
+    public POVButton getDpadLeft(){ return left;}
 
     public double getRightTriggerAxis(){ return xbox.getRightTriggerAxis();}
     public double getLeftTriggerAxis(){ return xbox.getLeftTriggerAxis();}
